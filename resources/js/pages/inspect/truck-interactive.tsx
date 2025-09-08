@@ -11,7 +11,7 @@ const TruckInteractive = () => {
                 <h1 className="text-2xl font-bold">Inspección Sistematica</h1>
                 <p>Vehiculo, Caja y Operador</p>
             </header>
-            <section>
+            <section className="dark:invert">
               <MapInteractive />
             </section>
         </article>
