@@ -1,4 +1,5 @@
 import MapInteractive from "@/components/inspection/map-interactive"
+import AppHeader from "@/layouts/app-header"
 import AppLayout from "@/layouts/app-layout"
 import { Head } from "@inertiajs/react"
 
@@ -6,11 +7,8 @@ const TruckInteractive = () => {
   return (
     <AppLayout>
         <Head title="Inspección Sistematica" />
-        <article className="p-4">
-            <header>
-                <h1 className="text-2xl font-bold">Inspección Sistematica</h1>
-                <p>Vehiculo, Caja y Operador</p>
-            </header>
+        <article className="py-5">
+            <AppHeader title="Inspección interactiva" />
             <section className="dark:invert">
               <MapInteractive />
             </section>

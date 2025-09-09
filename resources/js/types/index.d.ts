@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { ReactNode } from 'react';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
