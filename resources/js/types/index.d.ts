@@ -51,3 +51,14 @@ export interface Session {
     last_activity_human: string
     is_current: boolean
 }
+
+export interface SelectOption {
+    label: string
+    value?: string
+    childs?: SelectOption[]
+}
+
+export interface CatalogItem {
+    id: string
+    name: string
+}

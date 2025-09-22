@@ -5,11 +5,12 @@ import { TableHead } from '../ui/table';
 
 interface TableHeadLinkProps extends InertiaLinkProps {
     children: ReactNode;
+    className?: string
 }
 
-const TableHeadLink = ({ children, ...props }: TableHeadLinkProps) => {
+const TableHeadLink = ({ children, className="", ...props }: TableHeadLinkProps) => {
     return (
-        <TableHead>
+        <TableHead className={className}>
             <Button variant={'ghost'} size={'sm'} asChild>
                 <Link {...props}>{children}</Link>
             </Button>

@@ -11,7 +11,7 @@ const AppHeader = ({title, text, children} : AppHeaderProps) => {
     return (
         <>
             <Head title={title} />
-            <header className='flex justify-between items-center gap-5 container mb-4'>
+            <header className='flex justify-between items-center gap-5 container my-5'>
                 <div>
                     <h1 className="text-2xl font-bold">{title}</h1>
                     {text && (<p>{text}</p>)}

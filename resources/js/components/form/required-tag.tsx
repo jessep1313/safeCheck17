@@ -1,0 +1,1 @@
+export default () => <span className="text-red-400">*</span>
