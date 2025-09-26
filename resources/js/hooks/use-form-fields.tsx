@@ -43,7 +43,7 @@ export default () => {
         setField({
             label: row.label,
             description: row.description,
-            img_src: row.img_src.replace('/storage/', '')
+            img_src: row.img_src?.replace('/storage/', '')
         });
         openEditModal()
     }

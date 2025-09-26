@@ -53,6 +53,8 @@ const Home = () => {
           columns={columns}
           routeName="form.home"
           actions={actions}
+          onCreate={handleOpenCreate}
+          emptyMessage="No se encontrarón formularios de inspección"
         />
       </section>
 

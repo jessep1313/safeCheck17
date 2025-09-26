@@ -42,7 +42,7 @@ export default ({ onOpenCreate, onOpenEdit }: DatatableProps) => {
                                 <TableCell>
                                     {field.img_src ? (
                                         <picture>
-                                            <img src={field.img_src} className="inline-block h-10 w-10 rounded-full border bg-accent" />
+                                            <img src={field.img_src} className="inline-block h-10 w-10 rounded-full border bg-accent object-cover" />
                                         </picture>
                                     ) : (
                                         <Tooltip>

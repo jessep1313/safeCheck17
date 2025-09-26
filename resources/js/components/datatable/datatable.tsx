@@ -63,11 +63,15 @@ export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, 
                                     </DtHead>
                                 ),
                             )}
-                            {actions?.length > 0 && <TableHead className={`w-10 ${fixedActions ?'sticky right-0 top-0' : ''}`}></TableHead>}
+                            {actions?.length > 0 && (
+                                <TableHead 
+                                    className={`w-10 border-l border-b`} 
+                                />
+                            )}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {paginator?.data ? (
+                        {paginator?.data && paginator.data.length > 0 ? (
                             paginator?.data.map((row, key) => (
                                 <TableRow className='relative' key={key}>
                                     {columns.map((col, key) => {
@@ -77,19 +81,23 @@ export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, 
                                             </TableCell>
                                         );
                                     })}
-                                    {actions?.length > 0 && <DtRowActions actions={actions} row={row} fixed={fixedActions} />}
+                                    {actions?.length > 0 && (
+                                        <DtRowActions 
+                                            actions={actions} 
+                                            row={row} 
+                                            fixed={fixedActions}
+                                        />
+                                    )}
                                 </TableRow>
                             ))
                         ) : (
-                            <TableRow>
                                 <DtRowEmpty
-                                    colSpan={columns.length}
+                                    colSpan={actions.length > 0 ? columns.length +1 : columns.length}
                                     createLabel={createLabel}
                                     onCreate={onCreate}
                                     createLink={createLink}
                                     message={emptyMessage}
                                 />
-                            </TableRow>
                         )}
                     </TableBody>
                 </Table>

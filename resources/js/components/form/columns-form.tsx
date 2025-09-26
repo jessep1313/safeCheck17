@@ -5,6 +5,7 @@ export default (): ColumnDef<InspectForm>[] => [
     {
         key: 'folio',
         header: 'folio',
+        cell: (row) => row.folio.toUpperCase(),
         sortable: true,
     },
     {

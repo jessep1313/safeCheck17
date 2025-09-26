@@ -12,7 +12,6 @@ const mainNavItems: NavItem[] = [
     { title: 'Formularios', href: '/formularios', icon: FormInput },
     { title: 'Inspección Digital', href: '/inspeccion-digital', icon: ScanSearch },
     { title: 'Inspecciones Realizadas', href: '/inspecciones-realizadas', icon: SearchCheck },
-    { title: 'Catalogos', href: '/catalogos', icon: BookOpenText },
     { title: 'Reportes', href: '/reportes', icon: ClipboardList },
     { title: 'Control de Acceso', href: '/control-de-acceso', icon:  ShieldQuestion},
     { title: 'Control de Incidencias', href: '/control-de-incidencias', icon: ShieldAlert },
