@@ -1,31 +1,62 @@
 import { Icon } from '@/components/icon';
-import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import {
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarMenu,
+    SidebarMenuAction,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
+} from '@/components/ui/sidebar';
+import { NavGroup } from '@/types';
+import { Link } from '@inertiajs/react';
+import { Collapsible } from '@radix-ui/react-collapsible';
+import { ChevronDown } from 'lucide-react';
 import { type ComponentPropsWithoutRef } from 'react';
+import { CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 
 export function NavFooter({
-    items,
     className,
+    groups,
     ...props
 }: ComponentPropsWithoutRef<typeof SidebarGroup> & {
-    items: NavItem[];
+    groups?: NavGroup[];
 }) {
     return (
         <SidebarGroup {...props} className={`group-data-[collapsible=icon]:p-0 ${className || ''}`}>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {items.map((item) => (
-                        <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton
-                                asChild
-                                className="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
-                            >
-                                <a href={item.href} target="_blank" rel="noopener noreferrer">
-                                    {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
-                                    <span>{item.title}</span>
-                                </a>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
+                    {groups?.map((group, key) => (
+                        <Collapsible key={key}>
+                            <SidebarMenuItem>
+                                <CollapsibleTrigger asChild>
+                                    <SidebarMenuButton>
+                                        {group.icon && <Icon iconNode={group.icon} className="mr-2 size-4" />}
+                                        {group.title}
+                                        <SidebarMenuAction asChild>
+                                            <ChevronDown className="size-4 transition-transform peer-data-[state=open]/menu-button:rotate-180" />
+                                        </SidebarMenuAction>
+                                    </SidebarMenuButton>
+                                </CollapsibleTrigger>
+
+                                <CollapsibleContent>
+                                    <SidebarMenuSub>
+                                        {group.items.map((item, subkey) => (
+                                            <SidebarMenuSubItem key={subkey}>
+                                                <SidebarMenuSubButton asChild className="w-full">
+                                                    <Link href={item.href}>
+                                                        {item.icon && <Icon iconNode={item.icon} className="mr-2 size-4" />}
+                                                        {item.title}
+                                                    </Link>
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        ))}
+                                    </SidebarMenuSub>
+                                </CollapsibleContent>
+                            </SidebarMenuItem>
+                        </Collapsible>
                     ))}
                 </SidebarMenu>
             </SidebarGroupContent>

@@ -6,6 +6,7 @@ export default () => {
 
     const handleOpenModal = () => {
         setOpen(true)
+        console.log('Click')
     }
 
     const handleCloseModal = () => {

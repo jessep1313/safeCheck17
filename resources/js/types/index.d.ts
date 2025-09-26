@@ -1,5 +1,4 @@
 import { LucideIcon } from 'lucide-react';
-import { ReactNode } from 'react';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
@@ -12,6 +11,7 @@ export interface BreadcrumbItem {
 }
 
 export interface NavGroup {
+    icon?: LucideIcon;
     title: string;
     items: NavItem[];
 }
@@ -62,3 +62,4 @@ export interface CatalogItem {
     id: string
     name: string
 }
+

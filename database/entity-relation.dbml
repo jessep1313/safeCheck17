@@ -1,0 +1,83 @@
+Table users {
+  id integer [PK, not null]
+  name varchar(125) [not null]
+  email varchar(125) [not null, unique]
+  password varchar(255) [not null]
+  verified_email boolean [null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table certifications {
+  id integer [PK, not null]
+  name varchar(45) [not null, unique]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table vehicle_types {
+  id integer [PK, not null]
+  name varchar(45) [not null, unique]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table inspect_forms {
+  id integer [PK, not null]
+  certification_id int [ref: > certifications.id, not null]
+  vehicle_type_id int [ref: > vehicle_types.id, not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Enum inspect_form_field_location_enum {
+    tracto
+    towing
+}
+
+Table inspect_form_fields {
+  id integer [PK, not null]
+  inspect_form_id integer [ref: > inspect_forms.id, not null]
+  label varchar(125) [not null]
+  description varchar(255)
+  img_src varchar(170)
+  location inspect_form_field_location_enum [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Enum inspect_type_enum {
+  output
+  entry
+  outlet
+}
+
+Table inspections {
+  id integer [PK, not null]
+  user_id integer [ref: > users.id, not null]
+  certification_id integer [ref: > certifications.id, not null]
+  vehicle_type_id integer [ref: > vehicle_types.id, not null]
+  inspect_form_id integer [ref: > inspect_forms.id, not null]
+  type inspect_type_enum
+  transport_line varchar(150) [not null]
+  tractor_plate varchar(10) [not null]
+  number_towing integer [default: 1]
+  customer_name varchar(150) [not null]
+  seal_origin varchar(100) [not null]
+}
+
+Enum inspection_field_status_enum {
+    checked
+    pending
+    warning
+    in_review
+}
+
+Table inspections_has_fields {
+    id integer [PK, not null]
+    inspection_id integer [ref: > inspections.id, not null]
+    inspect_form_field_id integer [ref: > inspect_form_fields.id, not null]
+    status inspection_field_status_enum [default: 'pending', not null]
+    created_at timestamp [not null]
+    updated_at timestamp [not null]
+}

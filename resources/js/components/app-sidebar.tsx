@@ -2,9 +2,9 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import { NavGroup, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpenText, ClipboardList, FormInput, LayoutGrid, ScanSearch, SearchCheck, ShieldAlert, ShieldQuestion } from 'lucide-react';
+import { BookOpenText, ClipboardList, FormInput, LayoutGrid, ScanSearch, SearchCheck, ShieldAlert, ShieldQuestion, Truck, Users2 } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -18,7 +18,28 @@ const mainNavItems: NavItem[] = [
     { title: 'Control de Incidencias', href: '/control-de-incidencias', icon: ShieldAlert },
 ];
 
-const footerNavItems: NavItem[] = [
+const footerNavGroup: NavGroup[] = [
+    {
+        title: "Catalogos",
+        icon: BookOpenText,
+        items: [
+            {
+                title: "Camiones",
+                href: "/catalogos/tipos-de-camiones",
+                icon: Truck
+            },
+            {
+                title: "Certificados",
+                href: "/catalogos/certificados",
+                icon: ClipboardList
+            },
+            {
+                title: "Usuarios",
+                href: "/catalogos/usuarios",
+                icon: Users2
+            },
+        ]
+    }
 ];
 
 export function AppSidebar() {
@@ -41,7 +62,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                <NavFooter groups={footerNavGroup} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

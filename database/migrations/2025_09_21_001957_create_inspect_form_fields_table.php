@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('label', 125);
             $table->string('description', 255)->nullable();
             $table->string('img_src', 170)->nullable();
+            $table->enum('location', ['all', 'box', 'vehicle'])->default('all');
             $table->timestamps();
         });
     }

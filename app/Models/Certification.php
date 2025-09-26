@@ -10,8 +10,16 @@ class Certification extends Model
         'name'
     ];
 
+    /** SECTION Relaciones */
+
     public function inspectForms()
     {
         return $this->belongsTo(InspectForm::class);
     }
+
+    public function vehicleTypes () {
+        return $this->belongsToMany(VehicleType::class, 'inspect_forms');
+    }
+
+    // !SECTION
 }

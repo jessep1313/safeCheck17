@@ -1,30 +1,33 @@
-import { ArrowDownUp, CalendarArrowDown, Edit2, Hash, Plus, Search, Trash } from 'lucide-react';
-import { Button } from '../ui/button';
+import { ArrowDownUp, CalendarArrowDown, Edit2} from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import TableHeadLink from './head-link';
 import DtHeader from './dt-header';
-import { InspectForm } from '@/types/form-record';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Tooltip } from '../ui/tooltip';
 import DtRowAction from './dt-row-action';
 import DtRowDelete from './dt-row-delete';
+import DtRowEmpty from './dt-row-empty';
+import { FormPageProps } from '@/types/form-record';
+import DtPagination from './dt-pagination';
+import HeadSort from './head-sort';
 
 interface DtFormsProps {
-    data: InspectForm[]
     onOpenCreate: () => void
 }
 
-const DtForms = ({ onOpenCreate, data }: DtFormsProps) => {
+const DtForms = ({ onOpenCreate }: DtFormsProps) => {
+    
+    const { paginator, filter } = usePage<FormPageProps>().props
+
     return (
         <>
             <DtHeader searchPlaceholder='Buscar formulario . . .' />
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHeadLink href={''}>
-                            <Hash />
+                        <HeadSort columnKey='folio'>
                             Folio
-                        </TableHeadLink>
+                        </HeadSort>
                         <TableHeadLink href={''}><ArrowDownUp /> Tipo de vehículo</TableHeadLink>
                         <TableHeadLink href={''}><ArrowDownUp /> Certificación</TableHeadLink>
                         <TableHeadLink className='text-right' href={''}><ArrowDownUp /> Pts. Inspección</TableHeadLink>
@@ -36,9 +39,9 @@ const DtForms = ({ onOpenCreate, data }: DtFormsProps) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.length > 0 ? data.map(form => (
+                    {paginator?.data?.length > 0 ? paginator?.data?.map(form => (
                         <TableRow>
-                            <TableCell>{form.folio}</TableCell>
+                            <TableCell><span className='uppercase'>{form.folio}</span></TableCell>
                             <TableCell>{form.vehicleType}</TableCell>
                             <TableCell>{form.certificate}</TableCell>
                             <TableCell align='right'>{form.fields} {form.fields != 1 ? "puntos" : "punto"}</TableCell>
@@ -60,21 +63,17 @@ const DtForms = ({ onOpenCreate, data }: DtFormsProps) => {
                             </TableCell>
                         </TableRow>
                     )) : (
-                        <TableRow>
-                            <TableCell colSpan={5} className='text-center'>
-                                <div className='border-dashed border-2 p-5'>
-                                    <h3 className='mb-4'>
-                                        Aún no tienes formularios
-                                    </h3>
-                                    <Button size={'sm'} type='button' variant={'secondary'} onClick={onOpenCreate}>
-                                        Agregar <Plus />
-                                    </Button>
-                                </div>
-                            </TableCell>
-                        </TableRow>
+                        <DtRowEmpty
+                            colSpan={6}
+                            createLabel="Agregar formulario"
+                            onCreate={onOpenCreate}
+                            message="No hay formularios de inspección registrados"
+                        />
                     )}
                 </TableBody>
             </Table>
+
+            <DtPagination paginator={paginator} currentPerPage={filter.per_page?.toString()} currentRoute='form.home' />
         </>
     );
 };

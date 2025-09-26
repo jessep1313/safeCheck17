@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
+import { InputHTMLAttributes } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import RequiredTag from "./required-tag";

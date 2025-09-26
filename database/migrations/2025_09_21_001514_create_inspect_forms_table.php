@@ -22,9 +22,13 @@ return new class extends Migration {
                 ->references('id')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->boolean('preload_fields')->default(true);
             $table->string('folio', 12)->unique();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
+
+            // Unique constraint to prevent duplicate certification-vehicle_type combinations
+            $table->unique(['certification_id', 'vehicle_type_id'], 'unique_cert_vehicle_type');
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class InspectForm extends Model
@@ -10,6 +11,7 @@ class InspectForm extends Model
         'vehicle_type_id',
         'certification_id',
         'status',
+        'preload_fields',
         'folio'
     ];
 
@@ -34,6 +36,15 @@ class InspectForm extends Model
     public function vehicleType()
     {
         return $this->belongsTo(VehicleType::class, 'vehicle_type_id');
+    }
+
+    /** !SECTION */
+
+    /** SECTION Scopes */
+
+    public function scopeSearchValues(Builder $query, ?string $search = "") {
+        $search ??= "";
+        return $query->whereLike('folio', "%$search%");
     }
 
     /** !SECTION */

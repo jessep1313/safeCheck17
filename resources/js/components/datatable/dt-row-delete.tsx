@@ -1,9 +1,8 @@
-import { Trash2, X } from "lucide-react"
-import DtRowAction from "./dt-row-action"
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog"
-import { Button } from "../ui/button"
-import { useForm } from "@inertiajs/react"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog"
 import { toast } from "sonner"
+import { Trash2, X } from "lucide-react"
+import { useForm } from "@inertiajs/react"
+import DtRowAction from "./dt-row-action"
 
 interface DtRowDelete {
     id: string
@@ -31,7 +30,7 @@ export default ({
     id 
 }: DtRowDelete) => {
 
-    const { delete: destroy, processing } = useForm()
+    const { delete: destroy } = useForm()
 
     const onClick = () => {
         destroy(route(routePath, id), {
@@ -58,14 +57,12 @@ export default ({
                         {cancelLabel}
                         <X />
                     </AlertDialogCancel>
-                    <Button
-                        type="button"
-                        variant={"destructive"}
+                    <AlertDialogAction
                         onClick={onClick}
                     >
                         {submitLabel}
                         <Trash2 />
-                    </Button>
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

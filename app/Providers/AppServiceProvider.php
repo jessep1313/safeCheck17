@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\InspectForm;
 use App\Observers\InspectFormObserver;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         InspectForm::observe(InspectFormObserver::class);
+        Inertia::share([
+            'csrf_token' => fn () => csrf_token()
+        ]);
     }
 }

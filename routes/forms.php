@@ -17,4 +17,10 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('/{folio}/puntos', [InspectFormFieldController::class, 'fields'])->name('fields');
 
+        Route::post('/{folio}/puntos', [InspectFormFieldController::class, 'store'])->name('fields.store');
+
+        Route::put('/{id}/puntos', [InspectFormFieldController::class, 'update'])->name('fields.update');
+
+        Route::delete('/{id}/puntos', [InspectFormFieldController::class, 'destroy'])->name('fields.delete');
+
     });
