@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { FormEvent } from 'react';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
@@ -48,18 +49,19 @@ export interface Session {
     ip_address: string;
     user_agent: string;
     last_activity: number;
-    last_activity_human: string
-    is_current: boolean
+    last_activity_human: string;
+    is_current: boolean;
 }
 
 export interface SelectOption {
-    label: string
-    value?: string
-    childs?: SelectOption[]
+    label: string;
+    value?: string;
+    childs?: SelectOption[];
 }
 
 export interface CatalogItem {
-    id: string
-    name: string
+    id: string;
+    name: string;
 }
 
+export interface EventSubmit extends FormEvent<HTMLFormElement> {}

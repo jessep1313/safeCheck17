@@ -11,7 +11,7 @@ import AppLayout from "@/layouts/app-layout"
 import { BreadcrumbItem } from "@/types";
 import { AlertCircleIcon, Loader2, UserPlus } from "lucide-react";
 
-export default ({}) => {
+export default ({ }) => {
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/' },
@@ -59,9 +59,9 @@ export default ({}) => {
                 />
             </section>
 
-            <Modal 
-                open={open} 
-                onHide={handleHiddenModal} 
+            <Modal
+                open={open}
+                onHide={handleHiddenModal}
                 title={editable ? `${data.name}` : "Nuevo usuario"}
                 description={editable ? "Actualiza la información y guarda los cambios." : "Completa los campos para crear el usuario."}
                 actions={
@@ -75,9 +75,9 @@ export default ({}) => {
                     </Button>
                 }
             >
-                <form 
-                    className="flex flex-col gap-4" 
-                    id="form" 
+                <form
+                    className="flex flex-col gap-4"
+                    id="form"
                     onSubmit={handleSubmit}
                 >
                     <Field
@@ -107,7 +107,7 @@ export default ({}) => {
                             <AlertTitle>Nota importante</AlertTitle>
                             <AlertDescription>La contraseña será enviada al correo electrónico escrito el campo de arriba</AlertDescription>
                         </Alert>
-                    )}            
+                    )}
                 </form>
             </Modal>
         </AppLayout>

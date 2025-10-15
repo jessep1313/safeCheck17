@@ -7,15 +7,15 @@ interface DtHeadProps {
     align?: AlignColumn
 }
 
-export default ({children, align='start'}: DtHeadProps) => {
+export default ({ children, align = 'start' }: DtHeadProps) => {
 
     const aligns = {
-        start: 'left',
-        center: 'center',
-        end: 'right',
+        start: 'text-left',
+        center: 'text-center',
+        end: 'text-right',
     }
 
-    const className = `text-${aligns[align]}`
+    const className = `${aligns[align]}`
 
     return (
         <TableHead className={className}>

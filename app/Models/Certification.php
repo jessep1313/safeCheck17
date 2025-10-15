@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Certification extends Model
@@ -10,6 +11,12 @@ class Certification extends Model
         'name'
     ];
 
+    public function scopeSearchValues(Builder $query, ?string $search = "")
+    {
+        $search ??= "";
+        return $query->whereLike('name', "%$search%");
+    }
+
     /** SECTION Relaciones */
 
     public function inspectForms()
@@ -17,7 +24,8 @@ class Certification extends Model
         return $this->belongsTo(InspectForm::class);
     }
 
-    public function vehicleTypes () {
+    public function vehicleTypes()
+    {
         return $this->belongsToMany(VehicleType::class, 'inspect_forms');
     }
 

@@ -21,7 +21,7 @@ interface DataTableProps<T> {
 
 export type AlignColumn = 'left' | 'center' | 'right';
 
-export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, routeName, actions = [], fixedActions=true }: DataTableProps<T>) => {
+export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, routeName, actions = [], fixedActions = true }: DataTableProps<T>) => {
     const { filter, paginator } = usePage<DataTablePageProps<T>>().props;
 
     const onChangePerPage = (per_page: string) => {
@@ -64,8 +64,8 @@ export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, 
                                 ),
                             )}
                             {actions?.length > 0 && (
-                                <TableHead 
-                                    className={`w-10 border-l border-b`} 
+                                <TableHead
+                                    className={`w-10 border-l border-b`}
                                 />
                             )}
                         </TableRow>
@@ -82,22 +82,22 @@ export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, 
                                         );
                                     })}
                                     {actions?.length > 0 && (
-                                        <DtRowActions 
-                                            actions={actions} 
-                                            row={row} 
+                                        <DtRowActions
+                                            actions={actions}
+                                            row={row}
                                             fixed={fixedActions}
                                         />
                                     )}
                                 </TableRow>
                             ))
                         ) : (
-                                <DtRowEmpty
-                                    colSpan={actions.length > 0 ? columns.length +1 : columns.length}
-                                    createLabel={createLabel}
-                                    onCreate={onCreate}
-                                    createLink={createLink}
-                                    message={emptyMessage}
-                                />
+                            <DtRowEmpty
+                                colSpan={actions.length > 0 ? columns.length + 1 : columns.length}
+                                createLabel={createLabel}
+                                onCreate={onCreate}
+                                createLink={createLink}
+                                message={emptyMessage}
+                            />
                         )}
                     </TableBody>
                 </Table>
