@@ -30,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Catalogo de camiones
     Route::get('/catalogos/tipos-de-camiones', [TruckController::class, 'index'])->name('trucks.home');
     Route::post('/catalogos/tipos-de-camiones', [TruckController::class, 'store'])->name('trucks.store');
+    Route::put('/catalogos/tipos-de-unidad/{id}', [TruckController::class, 'update'])->name('trucks.update');
+    Route::delete('/catalogos/tipos-de-unidad/{id}', [TruckController::class, 'destroy'])->name('trucks.destroy');
 
     // Catalogo de certificados
     Route::get('/catalogos/certificados', [CertificateController::class, 'index'])->name('certificates.home');

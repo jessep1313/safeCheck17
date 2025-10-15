@@ -6,22 +6,22 @@ import useModal from "./use-modal";
 import { SelectOption } from "@/types";
 import { getCatalogAvailableVehicles } from "@/data/utils";
 
-export default function useRecordForm () {
+export default function useRecordForm() {
 
     const { certificates } = usePage<FormPageProps>().props
-    const [ vehicleOptions, setVehicleOptions ] = React.useState<SelectOption[]>([]);
+    const [vehicleOptions, setVehicleOptions] = React.useState<SelectOption[]>([]);
     const certificateOptions: SelectOption[] = certificates.map(opt => ({ label: opt.name, value: opt.id }));
 
     const { handleOpenModal, handleCloseModal, open } = useModal()
-    const {data, setData, post, delete : destroy, processing, errors, reset} = useForm<Required<InspectFormCreateBody>>({
-        certification_type: '', 
+    const { data, setData, post, delete: destroy, processing, errors, reset } = useForm<Required<InspectFormCreateBody>>({
+        certification_type: '',
         vehicle_type: '',
         preload_fields: true,
     })
 
     // region Change Changes
-    const handleChangeSelect = async(key: 'certification_type' | 'vehicle_type', value: string) => {
-        if(key === 'certification_type') {
+    const handleChangeSelect = async (key: 'certification_type' | 'vehicle_type', value: string) => {
+        if (key === 'certification_type') {
             const vehicleOptions = await getCatalogAvailableVehicles(value);
             const optionsFormat = vehicleOptions.map(opt => ({ label: opt.name, value: opt.id }))
             setVehicleOptions(optionsFormat)
@@ -37,16 +37,16 @@ export default function useRecordForm () {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         post(route('form.store'), {
-            onFinish: () => reset(),
             onProgress: () => toast.loading('Creando el formulario'),
             onSuccess: () => toast.success("El formulario se creo correctamente"),
             onError: () => toast.success("Error al crear el formulario, intentalo más tarde"),
+            onFinish: () => reset(),
         })
     }
 
     // region Eliminar formulario
     const handleDelete = (id: number) => {
-        destroy(route('form.delete', {id}), {
+        destroy(route('form.delete', { id }), {
             onProgress: () => toast.loading('Eliminando formulario de inspección'),
             onSuccess: () => toast.success('Se ha eliminado el formulario de inspección'),
             onError: () => toast.success('Error al eliminar el formulario de inspección, intentalo más tarde')

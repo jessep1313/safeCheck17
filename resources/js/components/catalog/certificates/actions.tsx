@@ -17,7 +17,7 @@ export default function getActions(
             label: 'Eliminar certificado',
             onClick: ({ id }) => handleDelete(id),
             confirmation: true,
-            cancelLabel: 'No, Eliminar',
+            cancelLabel: 'No eliminar',
             confirmLabel: 'Si, Eliminar',
             confirmTitle: '¿Eliminar este certificado?',
             confirmText: 'Una vez eliminado no podrás recuperarlo. Asegurate de no tener formularios relacionados a este.',

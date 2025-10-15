@@ -61,13 +61,13 @@ class InspectFormObserver
             [
                 'label' => 'Defensa',
                 'description' => 'Asegura que esté firme, sin golpes ni tornillos flojos.',
-                'location' => InspectFormFieldLocation::VEHICLE->value, 
+                'location' => InspectFormFieldLocation::VEHICLE->value,
                 'img-key' => 'defensa'
             ],
             [
                 'label' => 'Motor',
                 'description' => 'Revisa niveles (aceite/refrigerante), sin fugas ni ruidos anormales.',
-                'location' => InspectFormFieldLocation::VEHICLE->value, 
+                'location' => InspectFormFieldLocation::VEHICLE->value,
                 'img-key' => 'motor'
             ],
             [
@@ -178,19 +178,19 @@ class InspectFormObserver
 
         foreach ($defaultFields as $field) {
 
-            $defaultPath = "default/field/".$field['img-key'].".jpg";
+            $defaultPath = "default/field/" . $field['img-key'] . ".jpg";
             $newPath = null;
             Log::info("Copiando imagen para " . $field["label"]);
-            if(Storage::disk("public")->exists($defaultPath)) {
+            if (Storage::disk("public")->exists($defaultPath)) {
                 $imgContent = Storage::disk('public')->get($defaultPath);
                 $filename = uniqid('file-');
                 $newPath = "field/$inspectFormFolio/$filename.jpg";
                 Storage::disk('public')->put($newPath, $imgContent);
-                Log::info("Imagen copiada para ". $field["label"], [
+                Log::info("Imagen copiada para " . $field["label"], [
                     "path" => $newPath,
                     "key" => $field["img-key"]
                 ]);
-            }else{
+            } else {
                 Log::warning("Imagen no encontrada", [
                     "path" => $defaultPath,
                     "key" => $field["img-key"]

@@ -20,20 +20,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const Home = () => {
 
-  const { 
-    data, 
-    errors, 
-    handleChangeSelect, 
-    handleCloseCreate, 
-    handleOpenCreate, 
-    handleSubmit, 
+  const {
+    data,
+    errors,
+    handleChangeSelect,
+    handleCloseCreate,
+    handleOpenCreate,
+    handleSubmit,
     handleTogglePreFields,
     handleDelete,
-    openCreate, 
+    openCreate,
     processing,
     certificateOptions,
     vehicleOptions,
-  } = useRecordForm()  
+  } = useRecordForm()
 
   const columns = columnsForm() as ColumnDef<InspectForm>[];
   const actions = actionsRowForm(handleDelete)
@@ -64,12 +64,12 @@ const Home = () => {
         title="Nuevo formulario"
         description="Selecciona el tipo de certificación y camión para este formulario"
         actions={
-          <Button 
-            disabled={processing} 
-            type="submit" 
+          <Button
+            disabled={processing}
+            type="submit"
             form="formCreate"
           >
-            {processing ? "Guardando...": "Crear formulario"}
+            {processing ? "Guardando..." : "Crear formulario"}
             {processing ? <Loader className="animate-spin" /> : <ArrowRight />}
           </Button>
         }
@@ -97,7 +97,7 @@ const Home = () => {
             options={vehicleOptions}
             error={errors.vehicle_type}
           />
-          <FieldCardSwitch 
+          <FieldCardSwitch
             title="Precargar puntos de inspección"
             description="Si está activo, se precargarán los 18 campos estándar para inspección."
             checked={data.preload_fields}

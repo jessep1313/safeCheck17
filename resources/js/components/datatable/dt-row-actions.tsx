@@ -68,23 +68,25 @@ const DtRowAction = <T,>({ icon: Icon, label, to, cancelLabel = "Cancelar", conf
 
 export default <T,>({ actions, row, fixed = false }: DtRowActionsProps<T>) => {
     return (
-        <TableCell className={`${fixed ? "sticky right-0 z-10 border-l" : ""} text-end w-fit backdrop-blur-2xl`}>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant={'ghost'} size={'icon'} className="p-0.5!">
-                        <MoreVertical />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    {actions.map((action, index) => (
-                        <DtRowAction<T>
-                            key={index}
-                            row={row}
-                            {...action}
-                        />
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
+        <TableCell align="center" className={`${fixed ? "sticky right-0 top-0 z-10" : ""} text-end p-0 border-l! w-8 bg-background`}>
+            <div className="w-full flex items-center justify-center">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant={'ghost'} size={'icon'} className="p-0.5! h-7! w-7! flex items-center justify-center">
+                            <MoreVertical />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        {actions.map((action, index) => (
+                            <DtRowAction<T>
+                                key={index}
+                                row={row}
+                                {...action}
+                            />
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </TableCell>
     )
 }

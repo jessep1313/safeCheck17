@@ -72,7 +72,6 @@ class FormController extends Controller
         }
 
         try {
-
             $record = InspectForm::create([
                 'certification_id' => $request->input('certification_type'),
                 'vehicle_type_id' => $request->input('vehicle_type'),
@@ -87,10 +86,14 @@ class FormController extends Controller
             return redirect()->route('form.fields', ['folio' => $record->folio]);
 
         } catch (\Exception $e) {
+
             Log::error("No se pudo crear el formulario", [
                 'error' => $e->getMessage(),
                 'body' => $request->all()
             ]);
+
+            dd('error', $e->getMessage());
+
             return redirect()->back();
         }
     }
@@ -100,8 +103,8 @@ class FormController extends Controller
         try {
             $storage = Storage::disk('public');
             $record = InspectForm::findOrFail($id);
-            $fieldsDirectory = '/field/'. $record->folio;
-            if($storage->exists($fieldsDirectory)) {
+            $fieldsDirectory = '/field/' . $record->folio;
+            if ($storage->exists($fieldsDirectory)) {
                 $storage->deleteDirectory($fieldsDirectory);
             }
 
