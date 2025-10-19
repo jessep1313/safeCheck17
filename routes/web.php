@@ -41,8 +41,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
-require __DIR__ . '/utils.php';
-require __DIR__ . '/settings.php';
-require __DIR__ . '/forms.php';
-require __DIR__ . '/inspect.php';
+require __DIR__ . '/web/utils.php';
+require __DIR__ . '/web/settings.php';
+require __DIR__ . '/web/forms.php';
+require __DIR__ . '/web/inspect.php';
+require __DIR__ . '/web/reports.php';
+require __DIR__ . '/web/access.php';
+require __DIR__ . '/web/incidences.php';
 require __DIR__ . '/auth.php';
