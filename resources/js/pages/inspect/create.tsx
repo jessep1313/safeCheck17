@@ -1,11 +1,11 @@
+import AppHeader from "@/layouts/app-header"
 import AppLayout from "@/layouts/app-layout"
-import AuthSimpleLayout from "@/layouts/auth/auth-simple-layout"
 import { Head } from "@inertiajs/react"
 
 const Create = () => {
   return (
     <AppLayout>
-        <Head title="Inspección Digital" />
+      <AppHeader title="Nueva inspección digital" />
     </AppLayout>
   )
 }
