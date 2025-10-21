@@ -54,4 +54,24 @@ class User extends Authenticatable implements MustVerifyEmail
             ->whereLike('name', "%$search%")
             ->whereLike('email', "%$search%");
     }
+
+    // SECTION RELATIONSHIPS
+
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class);
+    }
+
+    public function drivenInspections()
+    {
+        return $this->hasMany(Inspection::class, 'driver_id');
+    }
+
+    public function guardedInspections()
+    {
+        return $this->hasMany(Inspection::class, 'guard_id');
+    }
+
+    // !SECTION FIN RELATIONSHIPS
+
 }

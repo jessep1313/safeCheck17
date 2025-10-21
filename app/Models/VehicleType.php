@@ -13,10 +13,13 @@ class VehicleType extends Model
 
     /** SECTION Scopes */
 
-    public function scopeAvailableByCertificate(Builder $query, $certification_id) {
+    public function scopeAvailableByCertificate(Builder $query, $certification_id)
+    {
         return $query
-            ->whereDoesntHave('certifications', fn ($query) => $query
-                ->where('certification_id', $certification_id)
+            ->whereDoesntHave(
+                'certifications',
+                fn($query) => $query
+                    ->where('certification_id', $certification_id)
             );
     }
 
@@ -25,12 +28,19 @@ class VehicleType extends Model
 
     /** SECTION Relaciones */
 
-    public function inspectForm () {
+    public function inspectForm()
+    {
         return $this->hasMany(InspectForm::class);
     }
 
-    public function certifications () {
+    public function certifications()
+    {
         return $this->belongsToMany(Certification::class, 'inspect_forms');
+    }
+
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class);
     }
 
     /** !SECTION */

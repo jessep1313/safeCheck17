@@ -53,8 +53,8 @@ export interface DataTablePageProps<T> extends PageProps {
 }
 
 export interface DataTableRowAction<T> {
-    label: string;
-    icon: LucideIcon;
+    label: string | ((row: T) => string);
+    icon: LucideIcon | ((row: T) => LucideIcon);
     to?: string | ((row: T) => string);
     onClick?: (row: T) => void;
     confirmation?: boolean;

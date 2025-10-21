@@ -67,13 +67,13 @@ export default ({ onOpenCreate, onOpenEdit }: DatatableProps) => {
                                     <DtRowAction onClick={() => onOpenEdit(field)} tooltip={`Editar ${field.label}`}>
                                         <Edit2 />
                                     </DtRowAction>
-                                    <DtRowDelete 
-                                        route="form.fields.delete" 
-                                        id={`${field.id}`} 
-                                        submitLabel='Si, eliminar'
-                                        cancelLabel='No, cancelar'
+                                    <DtRowDelete
+                                        route="form.fields.delete"
+                                        id={`${field.id}`}
+                                        submitLabel="Si, eliminar"
+                                        cancelLabel="No, cancelar"
                                         dialogTitle={`¿Eliminar ${field.label}?`}
-                                        dialogDescription='Si eliminas este punto de inspección, ¿Estás seguro que deseas continuar?.'
+                                        dialogDescription="Si eliminas este punto de inspección, ¿Estás seguro que deseas continuar?."
                                     />
                                 </TableCell>
                             </TableRow>

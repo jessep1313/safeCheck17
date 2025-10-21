@@ -38,11 +38,19 @@ class InspectForm extends Model
         return $this->belongsTo(VehicleType::class, 'vehicle_type_id');
     }
 
+    // LINK Inspecciones realizadas
+
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class, 'inspect_form_id');
+    }
+
     /** !SECTION */
 
     /** SECTION Scopes */
 
-    public function scopeSearchValues(Builder $query, ?string $search = "") {
+    public function scopeSearchValues(Builder $query, ?string $search = "")
+    {
         $search ??= "";
         return $query->whereLike('folio', "%$search%");
     }

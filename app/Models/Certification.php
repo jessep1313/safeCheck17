@@ -29,5 +29,10 @@ class Certification extends Model
         return $this->belongsToMany(VehicleType::class, 'inspect_forms');
     }
 
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class);
+    }
+
     // !SECTION
 }

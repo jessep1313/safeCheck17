@@ -4,41 +4,52 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavGroup, type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpenText, ClipboardList, FormInput, LayoutGrid, ScanSearch, SearchCheck, ShieldAlert, ShieldQuestion, Truck, Users2 } from 'lucide-react';
+import {
+    BookOpenText,
+    ClipboardList,
+    FormInput,
+    LayoutGrid,
+    ScanSearch,
+    SearchCheck,
+    ShieldAlert,
+    ShieldQuestion,
+    Truck,
+    Users2,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     { title: 'Dashboard', href: '/', icon: LayoutGrid },
     { title: 'Formularios', href: '/formularios', icon: FormInput },
-    { title: 'Inspección Digital', href: '/inspeccion-digital', icon: ScanSearch },
-    { title: 'Inspecciones Realizadas', href: '/inspecciones-realizadas', icon: SearchCheck },
+    { title: 'Inspección Digital', href: '/inspecciones/crear', icon: ScanSearch },
+    { title: 'Inspecciones Realizadas', href: '/inspecciones', icon: SearchCheck },
     { title: 'Reportes', href: '/reportes', icon: ClipboardList },
-    { title: 'Control de Acceso', href: '/control-de-acceso', icon:  ShieldQuestion},
+    { title: 'Control de Acceso', href: '/control-de-acceso', icon: ShieldQuestion },
     { title: 'Control de Incidencias', href: '/control-de-incidencias', icon: ShieldAlert },
 ];
 
 const footerNavGroup: NavGroup[] = [
     {
-        title: "Catalogos",
+        title: 'Catalogos',
         icon: BookOpenText,
         items: [
             {
-                title: "Camiones",
-                href: "/catalogos/tipos-de-camiones",
-                icon: Truck
+                title: 'Camiones',
+                href: '/catalogos/tipos-de-camiones',
+                icon: Truck,
             },
             {
-                title: "Certificados",
-                href: "/catalogos/certificados",
-                icon: ClipboardList
+                title: 'Certificados',
+                href: '/catalogos/certificados',
+                icon: ClipboardList,
             },
             {
-                title: "Usuarios",
-                href: "/catalogos/usuarios",
-                icon: Users2
+                title: 'Usuarios',
+                href: '/catalogos/usuarios',
+                icon: Users2,
             },
-        ]
-    }
+        ],
+    },
 ];
 
 export function AppSidebar() {
