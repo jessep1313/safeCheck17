@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Certification;
 use App\Models\Inspection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -66,9 +67,15 @@ class InspectionDigitalController extends Controller
     public function stepPrepare(string $uuid)
     {
         $inspection = Inspection::firstWhere('uuid', $uuid);
+        $certificates = Certification::get()->map(fn(Certification $cert) => [
+            'value' => $cert->id,
+            'label' => $cert->name
+        ]);
+
         return Inertia::render('inspect/create/prepare', [
-            'inspection' => $inspection,
             'uuid' => $uuid,
+            'inspection' => $inspection,
+            'certificatesOptions' => $certificates,
             'pageStep' => 'prepare',
         ]);
     }

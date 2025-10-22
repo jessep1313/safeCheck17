@@ -1,4 +1,5 @@
 import Field from '@/components/form/field';
+import FieldSelect from '@/components/form/field-select';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import StepsLayout from '@/layouts/inspectForm/steps-layout';
@@ -44,8 +45,24 @@ export default () => {
                     <Field
                         id="customer"
                         placeholder="Ingresa las placas del tracto"
-                        name="plate_number"
-                        label="Placas de la unidad (tracto)"
+                        name="customer_name"
+                        label="Nombre del cliente"
+                        required
+                    />
+                    <FieldSelect
+                        id='driver_id'
+                        name='driver_id'
+                        placeholder='Selecciona el conductor'
+                        options={[]}
+                        label='Conductor/Operador'
+                        required
+                    />
+                    <FieldSelect
+                        id='guard_id'
+                        name='guard_id'
+                        placeholder='Selecciona el guardia'
+                        options={[]}
+                        label='Guardia'
                         required
                     />
                 </fieldset>

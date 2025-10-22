@@ -1,5 +1,6 @@
 import { ColumnDef } from '@/types/datatable';
 import { Inspection } from '@/types/inspections';
+import { Badge } from '../ui/badge';
 
 export default (): ColumnDef<Inspection>[] => [
     {
@@ -15,6 +16,11 @@ export default (): ColumnDef<Inspection>[] => [
         key: 'status',
         sortable: true,
         columnType: 'text',
+        cell: (row) => {
+            return (
+                <Badge variant={row.status === "Pendiente" ? "outline" : "default"}>{row.status}</Badge>
+            )
+        }
     },
     {
         header: 'Creado por',

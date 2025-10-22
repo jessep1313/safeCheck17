@@ -1,9 +1,11 @@
 import Field from '@/components/form/field';
 import FieldRadioGroup from '@/components/form/field-radio-group';
 import FieldSelect from '@/components/form/field-select';
+import usePrepare from '@/hooks/inspectionDigital/use-prepare';
 import AppLayout from '@/layouts/app-layout';
 import StepsLayout from '@/layouts/inspectForm/steps-layout';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, SelectOption } from '@/types';
+import { usePage } from '@inertiajs/react';
 
 export default () => {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -13,11 +15,7 @@ export default () => {
         { title: 'Resumen', href: '/inspecciones/crear/summary' },
     ];
 
-    const inspectionTypeOptions = [
-        { label: 'Entrada', value: 'Entrada' },
-        { label: 'Salida', value: 'Salida' },
-        { label: 'Almacen', value: 'Almacen' },
-    ];
+    const { inspectionTypeOptions, certificatesOptions, vehicleTypeOptions, handleChangeCertificate } = usePrepare()
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -30,14 +28,15 @@ export default () => {
                             label="Certificado"
                             name="certification_id"
                             placeholder="Selecciona un certificado"
-                            options={[]}
+                            onValueChange={handleChangeCertificate}
+                            options={certificatesOptions as SelectOption[]}
                         />
                         <FieldSelect
                             id="vehicle_type"
                             label="Tipo de unidad"
                             name="vehicle_type_id"
                             placeholder="Selecciona un tipo de unidad"
-                            options={[]}
+                            options={vehicleTypeOptions}
                         />
                         <Field
                             id="trailer_quantity"

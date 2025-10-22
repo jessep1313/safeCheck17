@@ -2,9 +2,11 @@ import { useForm } from '@inertiajs/react';
 import { toast } from 'sonner';
 
 export default () => {
+
     const { post, processing } = useForm();
 
     const handleSubmit = (e: React.FormEvent) => {
+
         e.preventDefault();
         post(route('inspections.store'), {
             onSuccess: () => {
