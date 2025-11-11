@@ -8,10 +8,17 @@ class InspectionPoint extends Model
 {
     protected $fillable = [
         'inspect_form_field_id',
+        'number',
         'evidence',
         'result',
         'answered',
         'comments',
+    ];
+
+    protected $casts = [
+        'number' => 'integer',
+        'result' => 'boolean',
+        'answered' => 'boolean',
     ];
 
     // SECTION RELATIONSHIPS
@@ -23,7 +30,11 @@ class InspectionPoint extends Model
         return $this->belongsTo(Inspection::class);
     }
 
-    // !SECTION FIN RELATIONSHIPS
+    public function field()
+    {
+        return $this->belongsTo(InspectFormField::class, 'inspect_form_field_id');
+    }
 
+    // !SECTION FIN RELATIONSHIPS
 
 }

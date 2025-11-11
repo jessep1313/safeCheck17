@@ -1,4 +1,4 @@
-<?php
+<daniel class="09"></daniel><?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -56,6 +56,11 @@ return new class extends Migration {
             $table->enum('type', ['Entrada', 'Salida', 'Almacen'])->default('Entrada');
             $table->string('plate_number', 20)->nullable();
             $table->enum('status', ['Pendiente', 'Aprobado', 'Rechazado'])->default('Pendiente');
+            $table->enum('current_step', ['prepare', 'data', 'questions', 'summary'])->default('prepare');
+            $table->boolean('questions_init')->default(false);
+            $table->string('customer_name', 125)->nullable();
+            $table->string('driver_name', 125)->nullable();
+            $table->string('guard_name', 125)->nullable();
             $table->timestamps();
         });
     }

@@ -12,7 +12,7 @@ class InspectForm extends Model
         'certification_id',
         'status',
         'preload_fields',
-        'folio'
+        'folio',
     ];
 
     /** SECTION Relaciones */
@@ -48,10 +48,10 @@ class InspectForm extends Model
     /** !SECTION */
 
     /** SECTION Scopes */
-
-    public function scopeSearchValues(Builder $query, ?string $search = "")
+    public function scopeSearchValues(Builder $query, ?string $search = '')
     {
-        $search ??= "";
+        $search ??= '';
+
         return $query->whereLike('folio', "%$search%");
     }
 

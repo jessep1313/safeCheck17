@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { FormEvent } from 'react';
 import AppHeader from '../app-header';
 
 const form_steps = [
@@ -30,9 +32,12 @@ const form_steps = [
 
 interface StepsLayoutProps {
     children: React.ReactNode;
+    onSubmit: (e: FormEvent) => void;
+    processing?: boolean;
+    submitLabel?: string;
 }
 
-export default ({ children }: StepsLayoutProps) => {
+export default ({ children, onSubmit, processing, submitLabel = 'Siguiente' }: StepsLayoutProps) => {
     const { uuid, pageStep } = usePage().props;
     const currentStep = form_steps.find((step) => step.key === pageStep);
 
@@ -63,7 +68,7 @@ export default ({ children }: StepsLayoutProps) => {
                 </nav>
             </header>
 
-            <form method="post" className="my-6 px-4">
+            <form method="post" className="my-6 px-4" id="inspectForm" onSubmit={onSubmit}>
                 {children}
             </form>
 
@@ -78,12 +83,12 @@ export default ({ children }: StepsLayoutProps) => {
                 )}
 
                 {currentStep!.key !== 'summary' ? (
-                    <Button type="submit">
-                        Siguiente <ArrowRight />
+                    <Button type="submit" form="inspectForm" disabled={processing}>
+                        {submitLabel} {processing ? <Spinner /> : <ArrowRight />}
                     </Button>
                 ) : (
-                    <Button type="submit">
-                        Finalizar inspección <Check />
+                    <Button type="submit" form="inspectForm" disabled={processing}>
+                        Finalizar inspección {processing ? <Spinner /> : <Check />}
                     </Button>
                 )}
             </footer>

@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Enum\InspectFormFieldLocation;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class InspectFormField extends Model
 {
@@ -17,13 +17,14 @@ class InspectFormField extends Model
     ];
 
     protected $casts = [
-        'location' => InspectFormFieldLocation::class
+        'location' => InspectFormFieldLocation::class,
     ];
 
-    public function getImgSrcPublic() {
-        if($this->img_src) {
-            return "/storage/" . $this->img_src;
-        }else{
+    public function getImgSrcPublic()
+    {
+        if ($this->img_src) {
+            return '/storage/'.$this->img_src;
+        } else {
             return null;
         }
     }
@@ -36,4 +37,27 @@ class InspectFormField extends Model
     {
         return $this->belongsTo(InspectForm::class);
     }
+
+    // LINK Punto de inspección
+
+    public function inspectionPoint()
+    {
+        return $this->hasMany(InspectionPoint::class);
+    }
+
+    // !SECTION FIN RELACIONES
+
+    // SECTION SCOPES
+
+    public function scopeVehicleLocation(Builder $query)
+    {
+        return $query->where('location', InspectFormFieldLocation::VEHICLE);
+    }
+
+    public function scopeTrailerLocation(Builder $query)
+    {
+        return $query->where('location', InspectFormFieldLocation::BOX);
+    }
+
+    // !SECTION FIN SCOPES
 }

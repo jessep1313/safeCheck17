@@ -37,30 +37,30 @@ export default ({
 
     return (
         <div className={`block w-full ${className}`}>
-            <Label 
-                htmlFor={id} 
+            <Label
+                htmlFor={id}
                 className="mb-1"
             >
                 {label} {required && <RequiredTag />}
             </Label>
-            <Select 
-                onValueChange={onValueChange} 
+            <Select
+                onValueChange={onValueChange}
                 value={value}
                 defaultValue={defaultValue}
-                name={name} 
+                name={name}
                 required={required}
             >
                 <SelectTrigger className="w-full">
-                    <SelectValue 
-                        id={id} 
-                        placeholder={placeholder} 
+                    <SelectValue
+                        id={id}
+                        placeholder={placeholder}
                     />
                 </SelectTrigger>
                 <SelectContent>
                     {options.map((opt, key) => (
-                        <SelectItem 
-                            key={key} 
-                            value={opt.value?.toString() ||  ""}
+                        <SelectItem
+                            key={key}
+                            value={opt.value?.toString() || ""}
                         >
                             {opt.label}
                         </SelectItem>
@@ -70,7 +70,7 @@ export default ({
 
             {description && <FieldDescription description={description} />}
             {error && <FieldErrorMessage message={error} />}
-            
+
         </div>
     )
 }

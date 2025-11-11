@@ -1,3 +1,9 @@
+export enum InspectionType {
+    Entry = 'Entrada',
+    Output = 'Salida',
+    Storage = 'Almacen',
+}
+
 export interface Inspection {
     id: string;
     uuid: string;
@@ -20,7 +26,18 @@ export interface InspectionModel {
     trailer_quantity: number;
     company_transport: string;
     company_property: string;
-    type: string;
+    customer_name: string;
+    driver_name: string;
+    guard_name: string;
+    type: InspectionType;
     plate_number: string;
     status: string;
+}
+
+export interface InspectionTrailer {
+    inspection_id: string;
+    id: string;
+    plate?: string;
+    vin?: string;
+    seil?: string;
 }

@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\InspectionType;
+use App\Enums\InspectStatus;
+use App\Enums\Step;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +17,9 @@ class Inspection extends Model
         'driver_id',
         'guard_id',
         'inspect_form_id',
+        'guard_name',
+        'customer_name',
+        'driver_name',
         'uuid',
         'trailer_quantity',
         'company_transport',
@@ -21,6 +27,15 @@ class Inspection extends Model
         'type',
         'plate_number',
         'status',
+        'current_step',
+        'questions_init',
+    ];
+
+    protected $casts = [
+        'type' => InspectionType::class,
+        'current_step' => Step::class,
+        'status' => InspectStatus::class,
+        'questions_init' => 'boolean',
     ];
 
     // SECTION SCOPES
@@ -30,6 +45,7 @@ class Inspection extends Model
         if ($search) {
             return $query->where('plate_number', 'like', "%$search%");
         }
+
         return $query;
     }
 
@@ -86,10 +102,91 @@ class Inspection extends Model
         return $this->hasMany(InspectionTrailer::class);
     }
 
+    // LINK Puntos de inspección
     public function points()
     {
         return $this->hasMany(InspectionPoint::class);
     }
 
+    // LINK Evidencias
+    public function evidences()
+    {
+        return $this->hasMany(InspectionEvidence::class, 'inspection_id');
+    }
+
     // !SECTION FIN RELATIONSHIPS
+
+    // SECTION FUNCIONALIDADES
+
+    // LINK Obtener punto con problema
+
+    public function getProblemPoint(): ?InspectionPoint
+    {
+        if ($this->status === InspectStatus::Rejected) {
+            return $this
+                ->points()
+                ?->where('result', 0)
+                ->where('answered', true)
+                ?->first() ?? null;
+        } else {
+            return null;
+        }
+    }
+
+    // LINK Crear cuestionario
+
+    public function createForm()
+    {
+
+        if ($this->points->count() > 0) {
+            return;
+        }
+
+        $inspectForm = InspectForm::firstWhere(['certification_id' => $this->certification_id, 'vehicle_type_id' => $this->vehicle_type_id]);
+
+        $this->inspect_form_id = $inspectForm->id;
+        $this->save();
+
+        $vehicleFieldIds = $inspectForm->fields()->vehicleLocation()->pluck('id')->all();
+        $trailerFieldIds = $inspectForm->fields()->trailerLocation()->pluck('id')->all();
+        $trailersCount = $this->trailer_quantity;
+        $points = [];
+        $numberPoint = 1;
+
+        /** Agregar los puntos de inspección
+         * Se deben tomar en cuenta la cantidad de remolques que tiene la inspección:
+         * - trailer_quantity
+         * - los puntos con location trailer se repetiran segun la cantidad de inspección
+         * Los puntos del tracto (vehicle) solo se agregarán una vez
+         */
+        $pushPoints = function (array $fieldIds) use (&$points, &$numberPoint) {
+            foreach ($fieldIds as $fieldId) {
+                $points[] = [
+                    'inspect_form_field_id' => $fieldId,
+                    'number' => $numberPoint,
+                    'evidence' => null,
+                    'result' => false,
+                    'answered' => false,
+                    'comments' => null,
+                ];
+                $numberPoint++;
+            }
+        };
+
+        // Puntos para unidad
+        $pushPoints($vehicleFieldIds);
+
+        // Puntos para trailer
+        for ($i = 0; $i < $trailersCount; $i++) {
+            $pushPoints($trailerFieldIds);
+        }
+
+        if (! empty($points)) {
+            $this->points()->createMany($points);
+        }
+
+    }
+
+    // !SECTION FIN DE FUNCIONALIDADES
+
 }
