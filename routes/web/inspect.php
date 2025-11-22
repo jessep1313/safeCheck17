@@ -3,15 +3,20 @@
 use App\Http\Controllers\InspectionDigitalController;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/inspeccion-digital', [InspectionDigitalController::class, 'create'])->name('digital-inspection')->middleware('auth');
+
 Route::middleware('auth')
     ->prefix('inspecciones')
     ->as('inspections.')
     ->group(function () {
 
         Route::get('/', [InspectionDigitalController::class, 'index'])->name('home');
-        Route::get('/crear', [InspectionDigitalController::class, 'create'])->name('digital-inspection');
         Route::post('/crear', [InspectionDigitalController::class, 'store'])->name('store');
         Route::get('/{uuid}', [InspectionDigitalController::class, 'show'])->name('show');
+        Route::get('/{uuid}/descarga-excel', [InspectionDigitalController::class, 'exportExcel'])->name('export-excel');
+        Route::get('/{uuid}/descarga-pdf', [InspectionDigitalController::class, 'exportPdf'])->name('export-pdf');
+
 
         Route::prefix('/crear/{uuid}')->group(function () {
             Route::get('/preparar', [InspectionDigitalController::class, 'stepPrepare'])->name('step-prepare');
@@ -32,9 +37,8 @@ Route::middleware('auth')
             Route::get('/preguntas/problema/evidencia', [InspectionDigitalController::class, 'problemPointEvidence'])->name('problem-evidence');
             Route::post('/preguntas/problema/evidencia', [InspectionDigitalController::class, 'saveEvidence'])->name('save-evidence');
 
-            Route::get('/resumen', [InspectionDigitalController::class, 'stepSummary'])->name('step-summary');
-            Route::post('/resumen', [InspectionDigitalController::class, 'finishInspection'])->name('save-finish');
-
         });
+
+
 
     });

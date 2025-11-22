@@ -18,7 +18,7 @@ export default () => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <StepsLayout onSubmit={handleSubmit} processing={processing}>
-                <fieldset className="mb-6 grid grid-cols-3 gap-x-4 gap-y-6">
+                <fieldset className="mb-6 grid gap-x-4 gap-y-6 md:grid-cols-3">
                     <Field
                         id="company_transport"
                         placeholder="Escribe la empresa transportiste"
@@ -84,11 +84,11 @@ export default () => {
 
                 <h3 className="mb-4 text-xl">Remolques/Caja</h3>
 
-                <ul>
+                <ul className="w-full max-w-4xl">
                     {data.trailers.map((trailer, index) => (
-                        <li key={index} className="mb-2 flex w-4/5 items-start gap-10">
+                        <li key={index} className="mb-6 flex items-start gap-10">
                             <p className="inline-flex aspect-square w-8 items-center justify-center rounded-full border text-2xl">{index + 1}</p>
-                            <fieldset className="grid flex-1 grid-cols-3 gap-4">
+                            <fieldset className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3">
                                 <input type="hidden" value={trailer.id} />
                                 <Field
                                     id={`plate_trailer_${trailer.id}`}

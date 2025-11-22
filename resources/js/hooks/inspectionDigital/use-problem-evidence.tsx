@@ -8,9 +8,11 @@ interface FormEvidencesBody {
 export default () => {
     const { uuid } = usePage().props;
     const [previews, setPreviews] = React.useState<string[]>([]);
-    const { post, processing, setData, data } = useForm<FormEvidencesBody>({
+    const { post, processing, setData, data, errors } = useForm<FormEvidencesBody>({
         files: [],
     });
+
+    console.log(errors);
 
     const onChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
         const input = e.target;

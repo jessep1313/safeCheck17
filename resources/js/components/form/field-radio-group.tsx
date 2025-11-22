@@ -29,7 +29,7 @@ export default ({ label, options, required, value, name, id, onValueChange }: Fi
 
     return (
         <div>
-            <Label className="mb-1 block">
+            <Label className="mb-2 block">
                 {label} {required && <RequiredTag />}
             </Label>
             <div className="inline-flex space-x-2">

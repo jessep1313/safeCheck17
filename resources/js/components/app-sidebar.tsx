@@ -21,7 +21,7 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItem[] = [
     { title: 'Dashboard', href: '/', icon: LayoutGrid },
     { title: 'Formularios', href: '/formularios', icon: FormInput },
-    { title: 'Inspección Digital', href: '/inspecciones/crear', icon: ScanSearch },
+    { title: 'Inspección Digital', href: '/inspeccion-digital', icon: ScanSearch },
     { title: 'Inspecciones Realizadas', href: '/inspecciones', icon: SearchCheck },
     { title: 'Reportes', href: '/reportes', icon: ClipboardList },
     { title: 'Control de Acceso', href: '/control-de-acceso', icon: ShieldQuestion },

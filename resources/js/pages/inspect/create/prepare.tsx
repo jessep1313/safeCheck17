@@ -7,7 +7,6 @@ import AppLayout from '@/layouts/app-layout';
 import StepsLayout from '@/layouts/inspectForm/steps-layout';
 import { BreadcrumbItem, SelectOption } from '@/types';
 import { InspectionType } from '@/types/inspections';
-import { usePage } from '@inertiajs/react';
 import { AlertCircle } from 'lucide-react';
 
 export default () => {
@@ -18,16 +17,8 @@ export default () => {
         { title: 'Resumen', href: '/inspecciones/crear/summary' },
     ];
 
-    const {
-        inspectionTypeOptions,
-        certificatesOptions,
-        vehicleTypeOptions,
-        handleChangeCertificate,
-        handleSubmit,
-        data,
-        setData,
-        inspection,
-    } = usePrepare()
+    const { inspectionTypeOptions, certificatesOptions, vehicleTypeOptions, handleChangeCertificate, handleSubmit, data, setData, inspection } =
+        usePrepare();
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -68,11 +59,14 @@ export default () => {
                                 <AlertCircle />
                                 <AlertTitle>Cuidado</AlertTitle>
                                 <AlertDescription>
-                                    <p>Actualmente ya tienes {inspection.trailer_quantity} en esta inspección. Si cambias la cantidad a un valor menor de {inspection.trailer_quantity} perderás la iformación que ya hayas agregado en <span className='inline font-bold'>Datos de inspección</span></p>
+                                    <p>
+                                        Actualmente ya tienes {inspection.trailer_quantity} en esta inspección. Si cambias la cantidad a un valor
+                                        menor de {inspection.trailer_quantity} perderás la iformación que ya hayas agregado en{' '}
+                                        <span className="inline font-bold">Datos de inspección</span>
+                                    </p>
                                 </AlertDescription>
                             </Alert>
                         )}
-                        <></>
                         <Field
                             id="trailer_quantity"
                             name="trailer_quantity"

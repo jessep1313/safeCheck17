@@ -21,13 +21,6 @@ const form_steps = [
         prevRoute: 'inspections.save-data',
         key: 'questions',
     },
-    {
-        title: 'Resumen de inspección',
-        routeName: 'inspections.step-summary',
-        routeNameSubmit: 'inspections.save-finish',
-        prevRoute: 'inspections.save-questions',
-        key: 'summary',
-    },
 ];
 
 interface StepsLayoutProps {
@@ -48,20 +41,15 @@ export default ({ children, onSubmit, processing, submitLabel = 'Siguiente' }: S
                 <nav className="px-4">
                     <ul className="flex items-start space-x-4">
                         {form_steps.map((step, index) => (
-                            <li key={step.key}>
-                                <Link
-                                    className="group inline-flex items-center space-x-2 text-zinc-500 transition"
-                                    href={route(step.routeName, { uuid })}
+                            <li key={step.key} className="group inline-flex items-center space-x-2 text-center text-zinc-500 transition">
+                                <small
+                                    className={`inline-flex aspect-square h-6 items-center justify-center rounded-full bg-zinc-500 text-white group-hover:opacity-90 ${
+                                        currentStep!.key === step.key ? 'me-2.5 bg-emerald-600! ring-2 ring-emerald-600 ring-offset-2' : ''
+                                    }`}
                                 >
-                                    <small
-                                        className={`inline-flex aspect-square h-6 items-center justify-center rounded-full bg-zinc-500 text-white group-hover:opacity-90 ${
-                                            currentStep!.key === step.key ? 'me-2.5 bg-emerald-600! ring-2 ring-emerald-600 ring-offset-2' : ''
-                                        }`}
-                                    >
-                                        {index + 1}
-                                    </small>
-                                    <span>{step.title}</span>
-                                </Link>
+                                    {index + 1}
+                                </small>
+                                <span className="text-sm">{step.title}</span>
                             </li>
                         ))}
                     </ul>

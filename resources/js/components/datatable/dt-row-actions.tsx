@@ -1,6 +1,6 @@
 import { DataTableRowAction } from '@/types/datatable.d';
 import { Link } from '@inertiajs/react';
-import { MoreVertical } from 'lucide-react';
+import { LucideIcon, MoreVertical } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -44,7 +44,7 @@ const DtRowAction = <T,>({
     row,
 }: RowActionProps<T>) => {
     // Resolver icon y label
-    const Icon = typeof icon === 'function' ? icon(row) : icon;
+    const Icon = (typeof icon === 'function' ? icon(row!) : icon) as LucideIcon;
     const labelText = typeof label === 'function' ? label(row) : label;
 
     const isHref = !!to;

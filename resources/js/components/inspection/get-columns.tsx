@@ -1,5 +1,6 @@
 import { ColumnDef } from '@/types/datatable';
-import { Inspection } from '@/types/inspections';
+import { Inspection, InspectionStatus } from '@/types/inspections';
+import { Clock, LucideIcon, ShieldCheck, XCircle } from 'lucide-react';
 import { Badge } from '../ui/badge';
 
 export default (): ColumnDef<Inspection>[] => [
@@ -17,10 +18,33 @@ export default (): ColumnDef<Inspection>[] => [
         sortable: true,
         columnType: 'text',
         cell: (row) => {
+            const statuses: Record<
+                InspectionStatus,
+                {
+                    variant: 'default' | 'secondary' | 'destructive';
+                    icon: LucideIcon;
+                }
+            > = {
+                Aprobado: {
+                    variant: 'default',
+                    icon: ShieldCheck,
+                },
+                Pendiente: {
+                    variant: 'secondary',
+                    icon: Clock,
+                },
+                Rechazado: {
+                    variant: 'destructive',
+                    icon: XCircle,
+                },
+            };
+            const status = statuses[row.status] || 'default';
             return (
-                <Badge variant={row.status === "Pendiente" ? "outline" : "default"}>{row.status}</Badge>
-            )
-        }
+                <Badge variant={status.variant}>
+                    <status.icon /> {row.status}
+                </Badge>
+            );
+        },
     },
     {
         header: 'Creado por',
