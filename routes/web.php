@@ -48,4 +48,5 @@ require __DIR__ . '/web/inspect.php';
 require __DIR__ . '/web/reports.php';
 require __DIR__ . '/web/access.php';
 require __DIR__ . '/web/incidences.php';
+require __DIR__ . '/web/tour.php';
 require __DIR__ . '/auth.php';

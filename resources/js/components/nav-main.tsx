@@ -1,6 +1,8 @@
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import { ChevronDown } from 'lucide-react';
 
 function stripQueryHash(path: string) {
   // Asegura que solo usemos el pathname (sin query/hash)
@@ -33,7 +35,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
     <SidebarGroup className="px-2 py-0">
       <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {items.map((item) => item.href ? (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
               asChild
@@ -46,8 +48,34 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+        ) : (
+          // Item desplegable para childs
+          <Collapsible defaultOpen={item.childs?.some(child => isRouteActive(child.href!))} className="group:collapsible">
+            <SidebarMenuItem>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton>
+                  {item.icon && <item.icon />}
+                  {item.title}
+                  <SidebarMenuBadge>
+                    <ChevronDown size={16} />
+                  </SidebarMenuBadge>
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  {item.childs?.map((child) => (
+                    <SidebarMenuSubItem key={child.title}>
+                      <SidebarMenuSubButton isActive={isRouteActive(child.href!)} asChild>
+                        <Link href={child.href}>{child.title}</Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </SidebarMenuItem>
+          </Collapsible>
         ))}
       </SidebarMenu>
-    </SidebarGroup>
+    </SidebarGroup >
   );
 }

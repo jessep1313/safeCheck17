@@ -12,4 +12,9 @@ class InspectionEvidence extends Model
     {
         return $this->belongsTo(Inspection::class, 'inspection_id');
     }
+
+    public function getFullPathAttribute()
+    {
+        return "/storage/" . $this->path;
+    }
 }

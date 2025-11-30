@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enum\InspectFormFieldLocation;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class InspectionPoint extends Model
@@ -22,6 +24,26 @@ class InspectionPoint extends Model
     ];
 
     // SECTION RELATIONSHIPS
+
+    // SECTION SCOPES
+
+    // LINK Vehicle Points
+
+    public function scopeVehiclePoints (Builder $query) {
+        return $query->whereHas('field', function ($q) {
+            $q->where('location', InspectFormFieldLocation::VEHICLE)->orWhere('location', InspectFormFieldLocation::ALL);
+        });
+    }
+
+    // LINK Trailer Points
+
+    public function scopeTrailerPoints (Builder $query) {
+        return $query->whereHas('field', function ($q) {
+            $q->where('location', InspectFormFieldLocation::BOX);
+        });
+    }
+
+    // !SECTION FIN SCOPES
 
     // LINK Inspección a la que pertenece
 

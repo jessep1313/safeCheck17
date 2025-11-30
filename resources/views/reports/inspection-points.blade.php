@@ -1,204 +1,215 @@
 <!DOCTYPE html>
-<html lang="es-MX">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puntos de inspección</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
-        }
-
-        body {
-            padding: 20px 32px;
-        }
-
-        h1 {
-            font-size: 24px !important;
-        }
-
-        h2 {
-            font-size: 18px !important;
-            margin-bottom: 4px !important;
-        }
-
-        h3 {
-            font-size: 14px !important;
-            margin-bottom: 2px !important;
-        }
-
-        section {
-            margin-top: 20px !important;
-            display: block;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-        }
-
-        table th,
-        table td {
-            padding: 6px;
-            text-align: left;
-            vertical-align: top;
-            word-break: break-word;
-        }
-
-        table thead tr {
-            background: #f1f1f1;
-        }
-
-        .page-break {
-            page-break-after: always;
-        }
-
-        p {
-            margin-bottom: 3px !important;
-        }
-    </style>
+    <title>Document</title>
 </head>
 
+<style>
+    :root {
+        font-size: 12px;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 20px;
+    }
+
+    * {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    table {
+        display: table;
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+    table tr th,
+    table tr td {
+        border: 1px solid black;
+    }
+
+    .head-title {
+        font-weight: bold;
+        text-transform: uppercase;
+        background-color: #061652;
+        color: white;
+        font-size: 1rem;
+    }
+
+    .head-subtitle {
+        font-weight: bold;
+        text-transform: uppercase;
+        background-color: #b3b3b3;
+        color: black;
+        font-size: 1rem;
+    }
+
+    .td-comments * {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+</style>
+
+@php
+    $vehiclePoints = $inspection->points()->vehiclePoints()->orderBy('number')->get();
+    $trailerPoints = $inspection->points()->trailerPoints()->orderBy('number')->get();
+    $trailers = [];
+    $perPart = ceil($trailerPoints->count() / $inspection->trailer_quantity);
+    $trailerIndex = 0;
+    for ($i = 0; $i < $inspection->trailer_quantity; $i++) {
+        for ($j = 0; $j < $perPart; $j++) {
+            $trailers[$i][$j] = $trailerPoints[$trailerIndex];
+            $trailerIndex++;
+        }
+    }
+@endphp
+
 <body>
-    <article>
-        <header>
-            <h1>Inspección de unidad</h1>
-            <p><strong>UUID:</strong> {{ $inspection->uuid }}</p>
-        </header>
+    {{-- Header --}}
+    <table>
+        <thead>
+            <tr>
+                <th width="20%" rowspan="3">Logo</th>
+                <th width="50%" rowspan="3" style="text-transform: uppercase; font-size: 1.1rem;">Formato de inspección
+                    de compartimentos
+                    ocultos
+                </th>
+                <th style="text-align: left; font-weight: 400;" width="30%">
+                    <strong>Folio:</strong><br />{{ $inspection->uuid }}
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: left; font-weight: 400;">
+                    <strong>Fecha:</strong> {{ $inspection->created_at->format('d/m/Y') }}
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: left; font-weight: 400;">
+                    <strong>Hora:</strong> {{ $inspection->created_at->format('H:i:s') }}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3" style="color:transparent;">Espacio separador</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <!-- Datos de inspección -->
-        <section>
-            <h2>Datos de inspección</h2>
-            <p><strong>Estado:</strong> {{ $inspection->status }}</p>
+    {{-- Medios de transporte --}}
 
-            <table>
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2" class="head-title">Datos de los medios de transporte</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td width="50%"><strong>Linea de transporte:</strong> {{ $inspection->company_transport }}</td>
+                <td width="50%"><strong>Placa de remolque/caja 1:</strong> {{  $inspection->trailers[0]?->plate ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <td width="50%"><strong>Propietario de carga:</strong> {{ $inspection->company_property }}</td>
+                <td width="50%"><strong>Placa de remolque/caja 2:</strong> {{ $inspection->trailers[1]?->plate ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <td width="50%"><strong>Placas de unidad:</strong> {{ $inspection->plate_number }}</td>
+                <td width="50%"><strong>Sello de remolque/caja 1:</strong> {{ $inspection->trailers[0]?->seal ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <td width="50%"><strong>No. De remolques/cajas:</strong> {{ $inspection->trailer_quantity }}</td>
+                <td width="50%"><strong>Sello de remolque/caja 2:</strong> {{ $inspection->trailers[1]?->seal ?? '' }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Cliente:</strong> {{ $inspection->customer_name }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Guardia:</strong> {{ $inspection->guard_name }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Conductor:</strong> {{ $inspection->driver_name }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="color:transparent;">Espacio separador</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{-- Puntos de inspeccion --}}
+
+    <table>
+        <thead>
+            <tr>
+                <th colspan="4" class="head-title">Puntos de inspección</th>
+            </tr>
+            <tr>
+                <th colspan="4" class="head-subtitle">Tracto</th>
+            </tr>
+            <tr>
+                <th width="30%" style="text-align: left;">Punto a Revisar</th>
+                <th width="15%">Cumple</th>
+                <th width="15%">No Cumple</th>
+                <th width="40%" style="text-align: left;">Observaciones</th>
+            </tr>
+        </thead>
+        {{-- Tracto --}}
+        <tbody>
+            @foreach ($vehiclePoints as $point)
                 <tr>
-                    <td>
-                        <h3>Tipo de inspección</h3>
-                        <p>{{ $inspection->type }}</p>
-                    </td>
-                    <td>
-                        <h3>Certificado</h3>
-                        <p>{{ $inspection->certification->name }}</p>
-                    </td>
-                    <td>
-                        <h3>Compañía transportista</h3>
-                        <p>{{ $inspection->company_transport }}</p>
-                    </td>
+                    <td>{{ $point->number }}. {{ $point->field->label }}</td>
+                    <td align="center">{{ $point->result ? 'x' : '' }}</td>
+                    <td align="center">{{ !$point->result && $point->answered ? 'x' : '' }}</td>
+                    <td class="td-comments">{!! $point->comments !!}</td>
                 </tr>
+            @endforeach
 
+        </tbody>
+        {{-- Remolques --}}
+        @foreach ($trailers as $trailer)
+            <thead>
                 <tr>
-                    <td>
-                        <h3>Compañía propietaria</h3>
-                        <p>{{ $inspection->company_property }}</p>
-                    </td>
-                    <td>
-                        <h3>Creado por</h3>
-                        <p>{{ $inspection->user->name }}</p>
-                    </td>
-                    <td>
-                        <h3>Fecha de inspección</h3>
-                        <p>{{ $inspection->created_at->format('d-M-Y, h:i a') }}</p>
-                    </td>
+                    <th colspan="4" class="head-subtitle">Remolque/Caja {{ $loop->iteration }}</th>
                 </tr>
-            </table>
-        </section>
-
-        <!-- Participantes -->
-        <section>
-            <h2>Participantes</h2>
-
-            <table>
-                <thead>
+            </thead>
+            <tbody>
+                @foreach ($trailer as $point)
                     <tr>
-                        <th>Guardia</th>
-                        <th>Cliente</th>
-                        <th>Conductor</th>
+                        <td>{{ $point->number }}. {{ $point->field->label }}</td>
+                        <td align="center">{{ $point->result ? 'x' : '' }}</td>
+                        <td align="center">{{ !$point->result && $point->answered ? 'x' : '' }}</td>
+                        <td class="td-comments">{!! $point->comments !!}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ $inspection->guard_name }}</td>
-                        <td>{{ $inspection->customer_name }}</td>
-                        <td>{{ $inspection->driver_name }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+                @endforeach
+            </tbody>
+        @endforeach
+        <tbody>
+            <tr>
+                <td colspan="4" style="color:transparent;">Espacio separador</td>
+            </tr>
+            <tr>
+                <td colspan="4">Certifico haber llevado a cabo la inspección de seguridad del tracto camión y remolque,
+                    y en lo que
+                    a mi concierne
+                    considero que el mismo se encuentra libre de mercancía no documentada, ya que no fueron encontradas
+                    evidencias de modificaciones en estructuras, señales de reparaciones dudosas y/o de apertura del
+                    remolque.
+                    Si la caja/contenedor ingrese vacía, indique el No. de sello colocado al final de la inspección:
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        <!-- Transporte -->
-        <section>
-            <h2>Datos de transporte</h2>
-            <p><strong>Placas:</strong> {{ $inspection->plate_number }} |
-                <strong>Tipo de unidad:</strong> {{ $inspection->vehicleType->name }}
-            </p>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="4" style="font-size: 16px; padding-bottom: 6px;">Remolques / Cajas</th>
-                    </tr>
-                    <tr>
-                        <th>#</th>
-                        <th>Placas</th>
-                        <th>VIN / Serie</th>
-                        <th>No. Sello</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($inspection->trailers as $i => $trailer)
-                        <tr>
-                            <td>{{ $i + 1 }}</td>
-                            <td>{{ $trailer->plate }}</td>
-                            <td>{{ $trailer->vin }}</td>
-                            <td>{{ $trailer->seal ?? "No proporcionado" }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Puntos de inspección -->
-        <section>
-            <h2>Preguntas de inspección</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Concepto</th>
-                        <th>OK</th>
-                        <th>Comentarios</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($inspection->points as $point)
-                        <tr>
-                            <td>{{ $point->number }}</td>
-                            <td>{{ $point->field->label }}</td>
-                            <td>
-                                @if ($point->answered && $point->result)
-                                    SI
-                                @elseif ($point->answered && !$point->result)
-                                    NO
-                                @else
-                                    --
-                                @endif
-                            </td>
-                            <td style="max-width: 250px !important;">{!! $point->comments ?? "---" !!}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </section>
-
-    </article>
 </body>
 
 </html>

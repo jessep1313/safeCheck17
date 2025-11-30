@@ -11,7 +11,7 @@ export default () => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <AppHeader
-                title="Reportes"
+                title="Auditorías"
             />
         </AppLayout>
     );

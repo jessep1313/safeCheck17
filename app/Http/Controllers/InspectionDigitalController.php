@@ -533,7 +533,7 @@ class InspectionDigitalController extends Controller
         $inspection = Inspection::with(['trailers'])->firstWhere('uuid', $uuid);
         $filename = "$inspection->uuid.pdf";
         $pdf = Pdf::loadView("reports.inspection-points", compact('inspection'));
-        return $pdf->download($filename);
+        return $pdf->stream($filename);
         
     }
 }

@@ -17,11 +17,18 @@ export interface NavGroup {
     items: NavItem[];
 }
 
-export interface NavItem {
+export type NavItem = {
     title: string;
     href: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    childs?: undefined;
+} | {
+    title: string;
+    href?: string;
+    icon?: LucideIcon | null;
+    isActive?: boolean;
+    childs: NavItem[];
 }
 
 export interface SharedData {
@@ -64,4 +71,4 @@ export interface CatalogItem {
     name: string;
 }
 
-export interface EventSubmit extends FormEvent<HTMLFormElement> {}
+export interface EventSubmit extends FormEvent<HTMLFormElement> { }
