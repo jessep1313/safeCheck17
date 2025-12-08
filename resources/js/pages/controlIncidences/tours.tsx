@@ -11,6 +11,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function tours () {
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <AppHeader title="Incidencias de recorridos" text="Control de incidencias encontradas en los rondines" />
