@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inspection;
+use App\Models\Tour;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -36,17 +37,11 @@ class IncidenceControlController extends Controller
                     ->map(fn ($evidence) => $evidence->getFullPathAttribute()),
                 "description" => null,
                 "action_plan" => null,
-                "updated_at" => $row->updated_at->format("d/M/Y, h:i a"),
+                "updated_at" => $row->updated_at->format("d/m/Y, h:i a"),
             ]);
-
-        $breadcrumbs = [
-            ["title" => "Dashboard", "href" => "/"],
-            ["title" => "Control de incidencias", "href" => "/control-de-incidencias"],
-            ["title" => "Inspecciones", "href" => "/control-de-incidencias/inspecciones"],
-        ];
+        
         return Inertia::render("controlIncidences/home", [
             "title" => "Incidencias de inspección",
-            "breadcrumbs" => $breadcrumbs,
             "paginator" => $paginator,
             "filter" => [
                 "per_page" => $perPage,
@@ -69,28 +64,27 @@ class IncidenceControlController extends Controller
         $sortBy = $request->input("sort_by", "created_at");
         $search = $request->input("search","");
 
-        $paginator = Inspection::incidences()
+        $paginator = Tour::with('responsed', 'createdBy')
+            ->incidences()
             ->orderBy($sortBy, $sort)
-            ->searchValues($search)
-            ->paginate($perPage)
+            ->paginate(page: $currentPage, perPage: $perPage)
             ->withQueryString()
-            ->through(fn ($row) => [
-                "id" => $row->id,
-                "uuid" => $row->uuid,
-                "problem" => $row->getProblemPoint(),
-                "description" => null,
-                "action_plan" => null,
-                "updated_at" => $row->updated_at->format("d/M/Y, h:i a"),
+            ->through(fn($row) => [
+                'id' => $row->id,
+                'uuid' => $row->uuid,
+                'status' => $row->status,
+                'responsed' => $row->responsed->name,
+                'responsed_id' => $row->responsed->id,
+                'created_by' => $row->createdBy->name,
+                'created_by_id' => $row->createdBy->id,
+                'comments' => $row->comments,
+                'duration' => $row->duration,
+                'created_at' => $row->created_at->format('d/m/Y H:i a'),
+                'finished_at' => $row->finished_at ? $row->finished_at->format('d/m/Y H:i a') : "No finalizado",
             ]);
 
-        $breadcrumbs = [
-            ["title" => "Dashboard", "href" => "/"],
-            ["title" => "Control de incidencias", "href" => "/control-de-incidencias"],
-            ["title" => "Recorridos", "href" => "/control-de-incidencias/recorridos"],
-        ];
-        return Inertia::render("controlIncidences/home", [
+        return Inertia::render("controlIncidences/tours", [
             "title" => "Incidencias de recorridos",
-            "breadcrumbs"=> $breadcrumbs,
             "paginator" => $paginator,
             "filter" => [
                 "per_page" => $perPage,

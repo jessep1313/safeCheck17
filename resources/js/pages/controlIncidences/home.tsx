@@ -1,34 +1,28 @@
 import AppHeader from "@/layouts/app-header";
-import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem } from "@/types";
-import { usePage } from "@inertiajs/react";
-import { PageProps } from "@inertiajs/core";
-import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import AppLayout from '@/layouts/app-layout';
 import Datatable from "@/components/datatable/datatable";
 import { getColumns } from "@/components/incidences/columns";
 import { getActions } from "@/components/incidences/actions";
 import { Incidence } from "@/types/incidences";
+import { BreadcrumbItem } from '@/types';
 
-interface Props extends PageProps {
-    breadcrumbs: BreadcrumbItem[]
-    title: string
-}
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Dashboard', href: '/' },
+    { title: 'Control de incidencias', href: '/control-de-incidencias' },
+    { title: 'Inspecciones', href: '/control-de-incidencias/inspecciones' },
+];
 
 export default () => {
-
-    const { breadcrumbs, title } = usePage<Props>().props
-    const createPlanAction = (incidence: Incidence) => {
-        console.log(incidence)
-    }
-    const columns = getColumns()
-    const actions = getActions(createPlanAction)
+    const createPlanAction = (incidence: Incidence) => {};
+    const columns = getColumns();
+    const actions = getActions(createPlanAction);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <AppHeader title={title} text="Control de incidencias" />
+            <AppHeader title={'Incidencias de inspecciones'} text="Control de incidencias" />
             <article className="container">
                 <Datatable columns={columns} actions={actions} routeName="incidences-control.inspections" />
             </article>
         </AppLayout>
     );
-}
+};
