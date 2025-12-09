@@ -53,9 +53,22 @@ class Inspection extends Model
         return $query;
     }
 
+    public function scopeNotAudit(Builder $query)
+    {
+        $audits = AuditInspection::get()->pluck('inspection_id')->toArray();
+        return $query->whereNotIn('id', [$audits]);
+    }
+
     // !SECTION FIN SCOPES
 
     // SECTION RELATIONSHIPS
+
+    // LINK Auditoria
+
+    public function audit()
+    {
+        return $this->hasOne(AuditInspection::class, 'audit_inspection_id');
+    }
 
     // LINK Usuario que creó la inspección
 

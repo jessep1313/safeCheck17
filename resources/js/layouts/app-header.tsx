@@ -17,7 +17,7 @@ const AppHeader = ({ title, text, children }: AppHeaderProps) => {
                     {text && <p>{text}</p>}
                 </div>
 
-                {children && <nav>{children}</nav>}
+                {children && <nav className="space-x-2">{children}</nav>}
             </header>
         </>
     );
