@@ -2,56 +2,55 @@
 
 namespace App\Observers;
 
+use App\Enums\AuditType;
 use App\Models\Audit;
+use App\Models\Inspection;
+use Str;
 
 class AuditObserver
 {
-    /**
-     * Handle the Audit "created" event.
-     */
     public function created(Audit $audit): void
     {
-        //
+        switch ($audit->type) {
+            case AuditType::INSPECTION:
+                $this->createInspectionQuestions($audit);
+                break;
+            case AuditType::ROUNDED:
+                break;
+            default:
+        }
+
     }
 
-    /**
-     * Handle the Audit "updated" event.
-     */
-    public function updated(Audit $audit): void
+    public function creating(Audit $audit): void
     {
-        //
+        $audit->created_by_id = auth()->id();
     }
 
-    /**
-     * Handle the Audit "deleted" event.
-     */
-    public function deleted(Audit $audit): void
+    private function createInspectionQuestions(Audit $audit)
     {
-        //
-    }
-
-    /**
-     * Handle the Audit "restored" event.
-     */
-    public function restored(Audit $audit): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Audit "force deleted" event.
-     */
-    public function forceDeleted(Audit $audit): void
-    {
-        //
-    }
-
-    private function createInspectionQuestions (Audit $audit) {
         $questions = [
             "¿Se realizo una correcta inspección?",
             "¿Cubre los 360 grados de CCTV?",
             "¿Se utilizo la herramienta?",
             "¿Se reporto alguna incidencia?"
         ];
+        $inspectionsId = Inspection::notAudit()->limit(5)->pluck('id')->toArray();
+        foreach ($inspectionsId as $inspectionId) {
+
+            // Se crea la auditoria de inspección
+            $inspectionAudit = $audit->inspections()->create([
+                'inspection_id' => $inspectionId,
+                'created_by_id' => auth()->id(),
+                'uuid' => Str::uuid(),
+            ]);
+
+            // Se agregan las preguntas de inspección
+            foreach ($questions as $question) {
+                $inspectionAudit->questions()->create([
+                    'question' => $question
+                ]);
+            }
+        }
     }
 }

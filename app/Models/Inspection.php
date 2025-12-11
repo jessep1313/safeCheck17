@@ -56,7 +56,11 @@ class Inspection extends Model
     public function scopeNotAudit(Builder $query)
     {
         $audits = AuditInspection::get()->pluck('inspection_id')->toArray();
-        return $query->whereNotIn('id', [$audits]);
+        if (count($audits) > 0) {
+            return $query->whereNotIn('id', [$audits]);
+        } else {
+            return $query;
+        }
     }
 
     // !SECTION FIN SCOPES

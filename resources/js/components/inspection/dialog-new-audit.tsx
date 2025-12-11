@@ -1,10 +1,17 @@
-import Field from "../form/field";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Item } from "../ui/item";
+import { useForm } from '@inertiajs/react';
+import { ArrowRight } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Button } from '../ui/button';
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Spinner } from '../ui/spinner';
 
-export default function DialogNewAudit () {
+export default function DialogNewAudit() {
+    const { post, processing } = useForm();
+
+    const handleClick = () => {
+        post(route('audit.inspection.store'));
+    };
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -15,20 +22,24 @@ export default function DialogNewAudit () {
                     <DialogTitle>Nueva auditoria</DialogTitle>
                 </DialogHeader>
 
-                <form id="formAudit">
-                    <Alert>
-                        <AlertTitle>Se tomarán 5 inspecciones aleatorias</AlertTitle>
-                        <AlertDescription>Cada inspección tiene su archivo PDF al que podrás consultar para tener los detalles de la misma. Contestarás 4 preguntas referentes a la audición.</AlertDescription>
-                    </Alert>
-                </form>
-                
+                <Alert>
+                    <AlertTitle>Se tomarán 5 inspecciones aleatorias</AlertTitle>
+                    <AlertDescription>
+                        Cada inspección tiene su archivo PDF al que podrás consultar para tener los detalles de la misma. Contestarás 4 preguntas
+                        referentes a la audición.
+                    </AlertDescription>
+                </Alert>
+
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button variant={'outline'}>Cerrar</Button>
                     </DialogClose>
-                    <Button form="formAudit" type="submit">Comenzar auditoria</Button>
+                    <Button onClick={handleClick} disabled={processing}>
+                        Comenzar auditoria
+                        {processing ? <Spinner /> : <ArrowRight />}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
