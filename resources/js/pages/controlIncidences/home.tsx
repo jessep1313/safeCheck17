@@ -21,7 +21,7 @@ export default () => {
         <AppLayout breadcrumbs={breadcrumbs}>
             <AppHeader title={'Incidencias de inspecciones'} text="Control de incidencias" />
             <article className="container">
-                <Datatable columns={columns} actions={actions} routeName="incidences-control.inspections" />
+                <Datatable columns={columns} actions={actions} routeName="incidences-control.home" />
             </article>
         </AppLayout>
     );

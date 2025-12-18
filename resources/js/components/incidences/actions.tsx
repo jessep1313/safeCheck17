@@ -1,28 +1,19 @@
-import { DataTableRowAction } from "@/types/datatable";
-import { Incidence } from "@/types/incidences";
-import { router } from "@inertiajs/react";
-import { FileDown, SquareArrowUpRight, Workflow } from "lucide-react";
+import { DataTableRowAction } from '@/types/datatable';
+import { Incidence } from '@/types/incidences';
+import { CircleDotDashed, Download } from 'lucide-react';
 
-export const getActions = (createPlanAction: (incidence: Incidence) => void): DataTableRowAction<Incidence>[] => [
-    {
-        label: "Crear plan de acción",
-        icon: Workflow,
-        onClick(row) {
-            createPlanAction(row)
+export const getActions = (createPlanAction: (incidence: Incidence) => void): DataTableRowAction<Incidence>[] => {
+    return [
+        {
+            label: 'Descargar reporte',
+            icon: Download,
+            hide: ({ type }) => type !== 'Inspeccion',
+            onClick: ({ uuid }) => (window.location.href = route('inspections.export-pdf', { uuid })),
         },
-    },
-    {
-        label: "Ver inspección",
-        icon: SquareArrowUpRight,
-        onClick(row) {
-            router.visit(route('inspections.show', { uuid: row.uuid }))
-        }
-    },
-    {
-        label: "Descargar Reporte",
-        icon: FileDown,
-        onClick(row) {
-            window.open(route('inspections.export-pdf', { uuid: row.uuid }))
-        }
-    }
-]
+        {
+            label: 'Crear plan de acción',
+            icon: CircleDotDashed,
+            onClick: createPlanAction,
+        },
+    ];
+};

@@ -2,7 +2,7 @@ import TiptapEditor from '@/components/form/tip-tap';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
 import useProblemComment from '@/hooks/inspectionDigital/use-problem-comment';
-import ProblemLayout from '@/layouts/inspectForm/problem-layout';
+import ProblemLayout from '@/layouts/problem-layout';
 import { NotebookPen } from 'lucide-react';
 
 export default () => {

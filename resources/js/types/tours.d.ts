@@ -6,15 +6,16 @@ export type NewTour = {
 }
 
 export type TourRow = {
-    id: string
-    uuid: string
-    responsed: string
-    responsed_id: string
-    status: InspectionStatus
-    created_by: string
-    created_by_id: string
-    comments?: string
-    duration?: string
-    created_at: string
-    finished_at?: string
-}
+    id: string;
+    uuid: string;
+    responsed: string;
+    responsed_id: string;
+    status: InspectionStatus;
+    created_by: string;
+    created_by_id: string;
+    evidences: string[];
+    comments?: string;
+    duration?: string;
+    created_at: string;
+    finished_at?: string;
+};

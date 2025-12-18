@@ -1,20 +1,20 @@
-import { Button } from '@/components/ui/button';
-import useProblemEvidence from '@/hooks/inspectionDigital/use-problem-evidence';
-import ProblemLayout from '@/layouts/problem-layout';
-import { Plus, Trash } from 'lucide-react';
+import { Button } from "@/components/ui/button"
+import useEvidence from "@/hooks/tours/use-evidence"
+import ProblemLayout from "@/layouts/problem-layout"
+import { Plus, Trash } from "lucide-react"
 
 export default () => {
-    const { previews, onChangeImage, handleRemoveImage, handleSubmit } = useProblemEvidence();
-
+    const {handleRemoveImage, handleSubmit, onChangeImage, previews, processing} = useEvidence()
     return (
         <ProblemLayout
-            title="Toma evidencia"
-            description={`Carga fotografías para evidenciar el problema que se encuentra en el punto de inspección.`}
-            actionLabel="Enviar evidencia"
+            actionLabel="Guardar evidencia"
+            title="Toma de evidencia"
+            description="Carga o captura fotografías del problema como evidencia de la incidencia"
             onAction={handleSubmit}
+            processing={processing}
         >
             <section>
-                <Button variant={'secondary'} asChild>
+                <Button type="button" variant={'secondary'} asChild>
                     <label>
                         Agregar evidencia <Plus />
                         <input type="file" onChange={onChangeImage} className="hidden" />
@@ -45,5 +45,5 @@ export default () => {
                 )}
             </section>
         </ProblemLayout>
-    );
-};
+    )
+}

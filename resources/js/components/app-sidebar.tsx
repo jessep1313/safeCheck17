@@ -22,17 +22,12 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItem[] = [
     { title: 'Dashboard', href: '/', icon: LayoutGrid },
     { title: 'Formularios', href: '/formularios', icon: FormInput },
-    { title: 'Inspección Digital', href: '/inspeccion-digital', icon: ScanSearch },
-    { title: 'Inspecciones Realizadas', href: '/inspecciones', icon: SearchCheck },
+    { title: 'Inspección digital', href: '/inspeccion-digital', icon: ScanSearch },
+    { title: 'Inspecciones realizadas', href: '/inspecciones', icon: SearchCheck },
     { title: 'Bitacora de recorridos', href: '/recorridos', icon: Route },
     { title: 'Auditorías', href: '/auditorias', icon: ClipboardList },
-    { title: 'Control de Acceso', href: '/control-de-acceso', icon: ShieldQuestion },
-    {
-        title: "Control de Incidencias", icon: ShieldAlert, childs: [
-            { title: "Inspecciones", href: "/control-de-incidencias/inspecciones" },
-            { title: "Recorridos", href: "/control-de-incidencias/recorridos" },
-        ]
-    }
+    { title: 'Control de acceso', href: '/control-de-acceso', icon: ShieldQuestion },
+    { title: 'Control de incidencias', href: '/control-de-incidencias', icon: ShieldAlert },
 ];
 
 const footerNavGroup: NavGroup[] = [

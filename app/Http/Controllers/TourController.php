@@ -28,7 +28,7 @@ class TourController extends Controller
         $sortBy = $request->input('sort_by', 'created_at');
         $search = $request->input('search', '');
 
-        $paginator = Tour::with('responsed', 'createdBy')
+        $paginator = Tour::with('responsed', 'createdBy', 'evidences')
             ->orderBy($sortBy, $sort)
             ->paginate(page: $currentPage, perPage: $perPage)
             ->withQueryString()
@@ -42,6 +42,8 @@ class TourController extends Controller
                 'created_by_id' => $row->createdBy->id,
                 'comments' => $row->comments,
                 'duration' => $row->duration,
+                'evidences' => $row->status === InspectStatus::Rejected
+                    ? $row->evidences->pluck('path') : [],
                 'created_at' => $row->created_at->format('d/m/Y H:i a'),
                 'finished_at' => $row->finished_at ? $row->finished_at->format('d/m/Y H:i a') : "No finalizado",
             ]);
@@ -90,7 +92,22 @@ class TourController extends Controller
             return Inertia::render('tours/comment', [
                 'uuid' => $uuid
             ]);
+        } else {
+            return redirect()->route('tours.home');
         }
+    }
+
+    public function evidences(string $uuid)
+    {
+        $tour = Tour::firstWhere('uuid', $uuid);
+
+        if (!$tour) {
+            return http_response_code(404);
+        }
+
+        return Inertia::render('tours/evidences', [
+            'uuid' => $uuid
+        ]);
     }
 
     // !SECTION
@@ -139,10 +156,40 @@ class TourController extends Controller
         try {
             $tour->comments = $request->comment;
             $tour->save();
-            return redirect()->route('tours.home');
+            return redirect()->route('tours.evidences', ['uuid' => $uuid]);
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function saveEvidence(Request $request, string $uuid)
+    {
+        if (!$request->hasFile('files')) {
+            return back()->withErrors(['files' => 'No hay archivos']);
+        }
+
+        $request->validate([
+            'files' => 'required|array|min:1',
+            'files.*' => 'required|file|image|mimes:jpeg,png,jpg|max:20480',
+        ]);
+
+        $tour = Tour::firstWhere('uuid', $uuid);
+
+        // Usa $request->file('files') en lugar de $request->files
+        foreach ($request->file('files') as $file) {
+            if (!$file->isValid()) {
+                continue;
+            }
+
+            // Usa getClientOriginalExtension()
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('evidences', $filename, 'public');
+            $tour->evidences()->create([
+                'path' => $path,
+            ]);
+        }
+
+        return redirect()->route('tours.home');
     }
 
     // LINK - finish

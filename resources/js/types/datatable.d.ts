@@ -62,4 +62,5 @@ export interface DataTableRowAction<T> {
     confirmText?: string;
     confirmLabel?: string;
     cancelLabel?: string;
+    hide?: boolean | ((row: T) => boolean);
 }

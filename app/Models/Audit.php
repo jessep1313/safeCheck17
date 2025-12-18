@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AuditType;
+use Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Audit extends Model
@@ -9,6 +11,11 @@ class Audit extends Model
     protected $fillable = [
         'created_by_id',
         'type'
+    ];
+
+    protected $casts = [
+        'type' => AuditType::class,
+        'created_at' => 'timestamp'
     ];
 
     protected static function boot () {

@@ -11,10 +11,9 @@ export default function useComment () {
         setData('comment', value);
     }
 
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        post(route('tours.save.comment', {uuid}))
-    }
+    const onSubmit = () => {
+        post(route('tours.save.comment', { uuid }));
+    };
 
     return {
         onChangeValue,

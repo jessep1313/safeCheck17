@@ -42,12 +42,18 @@ const DtRowAction = <T,>({
     confirmation = false,
     onClick,
     row,
+    hide,
 }: RowActionProps<T>) => {
     // Resolver icon y label
     const Icon = (typeof icon === 'function' ? icon(row!) : icon) as LucideIcon;
     const labelText = typeof label === 'function' ? label(row) : label;
 
+    const isHidden = typeof hide === 'function' ? hide(row) : hide;
     const isHref = !!to;
+
+    if (isHidden) {
+        return null;
+    }
 
     const handleClick = () => {
         onClick?.(row);

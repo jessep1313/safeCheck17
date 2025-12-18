@@ -1,10 +1,15 @@
-import { InspectionPointProblem } from "./inspections"
+export enum IncidenceType {
+    INSPECTION = 'Inspeccion',
+    ROUND = 'Recorrido',
+    OTHER = 'Otro',
+}
 
-interface Incidence {
-    id: string
-    uuid: string
-    evidences: string[]
-    description?: string
-    action_plan?: string
-    updated_at: string
+export interface Incidence {
+    id: string;
+    uuid: string;
+    type: IncidenceType;
+    evidences: string[];
+    comments?: string;
+    action_plan?: string;
+    created_at: string;
 }

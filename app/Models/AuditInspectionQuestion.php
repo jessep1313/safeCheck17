@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class AuditInspectionQuestion extends Model
@@ -21,5 +22,15 @@ class AuditInspectionQuestion extends Model
 
     public function auditInspection () {
         return $this->belongsTo(AuditInspection::class);
+    }
+
+    public function scopeNotAnswared(Builder $query)
+    {
+        return $query->where('answared', false);
+    }
+
+    public function scopeAnswed(Builder $query)
+    {
+        return $query->where('answared', true);
     }
 }

@@ -8,7 +8,5 @@ Route::prefix('control-de-incidencias')
     ->group(function () {
 
         Route::get('/', [IncidenceControlController::class, 'index'])->name('home');
-        Route::get('/inspecciones', [IncidenceControlController::class, 'inspections'])->name('inspections');
-        Route::get('/recorridos', [IncidenceControlController::class, 'rounds'])->name('rounds');
 
     });

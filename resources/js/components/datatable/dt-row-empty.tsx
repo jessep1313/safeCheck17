@@ -1,8 +1,7 @@
 import { NotepadTextDashed, Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { TableCell, TableRow } from "../ui/table";
-import { Link } from "@inertiajs/react";
-import NotDataIlustration from "../ilustrations/not-data-ilustration";
+import { Link } from '@inertiajs/react';
 
 interface DtRowEmptyProps {
     onCreate?: () => void

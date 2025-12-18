@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inspection;
+use App\Models\IncidenceAllView;
 use App\Models\Tour;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class IncidenceControlController extends Controller
 {
-    public function index()
+    public function index(request $request)
     {
-        return redirect()->route("incidences-control.inspections");
-    }
-
-    public function inspections (request $request) {
-
         $currentPage = $request->input("page",1);
         $perPage = $request->input("per_page",15);
         $sort = $request->input("sort","desc");
@@ -23,21 +19,14 @@ class IncidenceControlController extends Controller
         $search = $request->input("search","");
 
 
-        $paginator = Inspection::with('evidences')
-            ->incidences()
+        $paginator = IncidenceAllView::select(['id', 'uuid', 'type', 'created_at', 'comments', 'evidences'])
             ->orderBy($sortBy, $sort)
             ->searchValues($search)
             ->paginate($perPage)
             ->withQueryString()
             ->through(fn ($row) => [
-                "id" => $row->id,
-                "uuid" => $row->uuid,
-                "evidences" => $row->evidences()
-                    ->get()
-                    ->map(fn ($evidence) => $evidence->getFullPathAttribute()),
-                "description" => null,
-                "action_plan" => null,
-                "updated_at" => $row->updated_at->format("d/m/Y, h:i a"),
+                ...$row->toArray(),
+                'created_at' => Carbon::parse($row->created_at)->format('d/m/Y, h:i a'),
             ]);
         
         return Inertia::render("controlIncidences/home", [

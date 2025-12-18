@@ -136,11 +136,21 @@
 }
 
 @layer base {
+    :root {
+            --color-incidence: 0 84% 60%;
+            /* rojo para incidencias */
+            --color-notIncidence: 142 76% 36%;
+            /* verde para sin incidencias */
+        }
     * {
         @apply border-border;
     }
 
     body {
         @apply bg-background text-foreground;
+    }
+    .dark {
+        --color-incidence: 0 72% 51%;
+        --color-notIncidence: 142 70% 45%;
     }
 }

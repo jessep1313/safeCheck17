@@ -39,9 +39,23 @@ class Inspection extends Model
     ];
 
     // SECTION SCOPES
-    
+
+    public function scopeNotIncidences(Builder $query)
+    {
+        return $query->where('status', InspectStatus::Approved);
+    }
     public function scopeIncidences(Builder $query) {
         return $query->where('status', InspectStatus::Rejected);
+    }
+
+    public function scopeOutputs(Builder $query)
+    {
+        return $query->where('type', InspectionType::Output);
+    }
+
+    public function scopeEntries(Builder $query)
+    {
+        return $query->where('type', InspectionType::Entry);
     }
 
     public function scopeSearchValues(Builder $query, ?string $search)

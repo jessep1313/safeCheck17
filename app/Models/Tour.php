@@ -37,6 +37,10 @@ class Tour extends Model
     {
         return $query->where('status', InspectStatus::Rejected);
     }
+    public function scopeNotIncidences(Builder $query)
+    {
+        return $query->where('status', InspectStatus::Approved);
+    }
 
     public function responsed()
     {
@@ -46,5 +50,10 @@ class Tour extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function evidences()
+    {
+        return $this->hasMany(TourEvidence::class);
     }
 }
