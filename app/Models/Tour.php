@@ -31,7 +31,7 @@ class Tour extends Model
     protected $casts = [
         'finished_at' => 'datetime',
         'status' => InspectStatus::class
-    ];
+    ]; 
 
     public function scopeIncidences(Builder $query)
     {
@@ -55,5 +55,9 @@ class Tour extends Model
     public function evidences()
     {
         return $this->hasMany(TourEvidence::class);
+    }
+
+    public function points () {
+        return $this->hasMany(TourQuestion::class);
     }
 }

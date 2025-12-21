@@ -49,13 +49,16 @@ export const columns = (): ColumnDef<TourRow>[] => {
             key: 'duration',
             columnType: 'time',
             align: 'end',
+            cell: ({ duration }) => <span>{duration !== "0" ? duration : '--:--:--'} <Clock className='inline' size={13} /></span>
         },
         {
             header: 'Incidencia',
             key: 'comments',
             cell: (row) =>
                 row.comments ? (
-                    <span dangerouslySetInnerHTML={{ __html: row.comments }}></span>
+                    <span className='max-w-[200px] w-full block'>
+                        <div className='w-full line-clamp-2 text-wrap' dangerouslySetInnerHTML={{ __html: row.comments }}></div>
+                    </span>
                 ) : (
                     <span className="text-foreground">Sin incidencias</span>
                 ),

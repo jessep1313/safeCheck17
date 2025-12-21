@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Key, LogIn, Palette, UserPen } from 'lucide-react';
+import { Key, LogIn, Palette, Route, UserPen } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 
 const sidebarNavItems: NavItem[] = [
@@ -22,6 +22,11 @@ const sidebarNavItems: NavItem[] = [
         title: 'Apariencia',
         href: '/settings/appearance',
         icon: Palette,
+    },
+    {
+        title: 'Recorridos',
+        href: '/settings/recorridos',
+        icon: Route,
     },
     {
         title: 'Inicios de sesión',

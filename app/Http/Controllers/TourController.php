@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Enums\InspectStatus;
+use App\Exports\ExportTourExcel;
 use App\Http\Requests\TourIncidenceRequest;
 use App\Http\Requests\TourStoreRequest;
 use App\Models\Tour;
+use App\Models\TourQuestion;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TourController extends Controller
 {
@@ -66,6 +70,7 @@ class TourController extends Controller
         $users = User::select('id', 'name')
             ->get()
             ->map(fn($user) => ['label' => $user->name, 'value' => $user->id]);
+
         return Inertia::render("tours/initialize", [
             'users' => $users,
         ]);
@@ -80,6 +85,40 @@ class TourController extends Controller
         ]);
     }
 
+    // LINK - Preguntas
+
+    public function questions(string $uuid)
+    {
+        $tour = Tour::firstWhere('uuid', $uuid);
+
+        if (!$tour) {
+            return http_response_code(404);
+        }
+
+        $question = $tour
+            ->points()
+            ->orderBy('position', 'asc')
+            ->where('answered', false)
+            ->first();
+
+        $questionCount = $tour->points()->orderBy('position', 'asc')->get();
+
+        if (!$question) {
+            /* NOTE: Sin preguntas
+            *  Significa que todas las preguntas han sido respondidas
+            *  Por lo tanto, el tour se considera terminado
+            *  Y se redirige al dashboard del tour
+            */
+            return redirect()->route('tours.show', ['uuid' => $uuid]);
+        }
+
+        return Inertia::render('tours/question', [
+            'uuid' => $uuid,
+            'data' => $question,
+            'points' => $questionCount
+        ]);
+    }
+
     // LINK - Comentario
 
     public function comment(string $uuid)
@@ -88,7 +127,7 @@ class TourController extends Controller
         if (!$tour) {
             return http_response_code(404);
         }
-        if (!$tour->comments && $tour->duration) {
+        if (!$tour->comments) {
             return Inertia::render('tours/comment', [
                 'uuid' => $uuid
             ]);
@@ -96,6 +135,8 @@ class TourController extends Controller
             return redirect()->route('tours.home');
         }
     }
+
+    // LINK - Evidencias
 
     public function evidences(string $uuid)
     {
@@ -110,7 +151,35 @@ class TourController extends Controller
         ]);
     }
 
+    // LINK - Detalles
+
+    public function show (string $uuid) {
+        $tour = Tour::firstWhere('uuid', $uuid);
+        $questions = $tour->points()->orderBy('position', 'asc')->get();
+        $evidences = $tour
+            ->evidences()
+            ->get()
+            ->map(fn ($evidence) => "/storage/" . $evidence->path)
+            ->toArray(); 
+        $data = $tour->toArray();
+        
+        $data["responsed"] = $tour->responsed()->first()->name;
+        $data["created_at"] = $tour->created_at->format('d/m/Y H:i a');
+
+        if(!$tour) {
+            return http_response_code(404);
+        }
+        return Inertia::render('tours/show', [
+            'uuid' => $uuid,
+            'data' => $data,
+            'questions' => $questions,
+            'evidences' => $evidences
+        ]);
+    }
+
     // !SECTION
+
+    // SECTION Actions
 
     // LINK - Store
 
@@ -122,27 +191,36 @@ class TourController extends Controller
             'status' => InspectStatus::Pending,
         ]);
 
-        return redirect()->route('tours.timer', ['uuid' => $tour->uuid]);
+        return redirect()->route('tours.question', ['uuid' => $tour->uuid]);
     }
 
-    // LINK incidence
+    // LINK - Save Question
 
-    public function incidence(string $uuid)
-    {
-        $tour = Tour::firstWhere('uuid', $uuid);
-        if (!$tour) {
-            return http_response_code(404);
+    public function saveQuestion (string $id, string $answer) {
+        $question = TourQuestion::with('tour')->findOrFail($id);
+        $lastPosition = $question->tour->points()->count();
+        $isLastPosition = $lastPosition === $question->position;
+        $result = boolval($answer);
+        $question->update([
+            'answered' => true,
+            'result' => $result
+        ]);
+
+        if($isLastPosition || !$result) {
+            $status = $result ? InspectStatus::Approved : InspectStatus::Rejected;
+            $this->setTime($question->tour->uuid);
+            $question->tour->update([
+                'status' => $status,
+                'finished_at' => Carbon::now()
+            ]);
+
+            $route = $result ? 'tours.show' : 'tours.comment';
+            return redirect()->route($route, ['uuid' => $question->tour->uuid]);
         }
 
-        try {
-            $this->setTime($uuid);
-            $tour->status = InspectStatus::Rejected;
-            $tour->finished_at = Carbon::now();
-            $tour->save();
-            return redirect()->route('tours.comment', ['uuid' => $uuid]);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return redirect()->route('tours.question', [
+            'uuid' => $question->tour->uuid
+        ]);
     }
 
     // LINK - Save Comment
@@ -162,6 +240,8 @@ class TourController extends Controller
         }
     }
 
+    // LINK - Save Evidence
+
     public function saveEvidence(Request $request, string $uuid)
     {
         if (!$request->hasFile('files')) {
@@ -175,13 +255,11 @@ class TourController extends Controller
 
         $tour = Tour::firstWhere('uuid', $uuid);
 
-        // Usa $request->file('files') en lugar de $request->files
         foreach ($request->file('files') as $file) {
             if (!$file->isValid()) {
                 continue;
             }
 
-            // Usa getClientOriginalExtension()
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('evidences', $filename, 'public');
             $tour->evidences()->create([
@@ -189,7 +267,7 @@ class TourController extends Controller
             ]);
         }
 
-        return redirect()->route('tours.home');
+        return redirect()->route('tours.show', ['uuid' => $uuid]);
     }
 
     // LINK - finish
@@ -206,6 +284,26 @@ class TourController extends Controller
             $tour->status = InspectStatus::Approved;
             $tour->save();
             return redirect()->route('tours.home');
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    // LINK - Incidence
+
+    public function incidence(string $uuid)
+    {
+        $tour = Tour::firstWhere('uuid', $uuid);
+        if (!$tour) {
+            return http_response_code(404);
+        }
+
+        try {
+            $this->setTime($uuid);
+            $tour->status = InspectStatus::Rejected;
+            $tour->finished_at = Carbon::now();
+            $tour->save();
+            return redirect()->route('tours.comment', ['uuid' => $uuid]);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -236,4 +334,30 @@ class TourController extends Controller
         }
     }
 
+    // !SECTION
+    
+    // SECTION Exports
+    
+    // LINK - Export to PDF
+    
+    public function exportToPDF($uuid)
+    {
+        $tour = Tour::firstWhere('uuid', $uuid);
+        if (!$tour) {
+            return http_response_code(404);
+        }
+        $pdf = Pdf::loadView('reports.tour-points', ['tour' => $tour]);
+        return $pdf->stream('tour.pdf');
+    }
+
+    // LINK - Export to Excel
+
+    public function exportToExcel($uuid)
+    {
+        $tour = Tour::firstWhere('uuid', $uuid);
+        if (!$tour) {
+            return http_response_code(404);
+        }
+        return Excel::download(new ExportTourExcel($tour->id), "recorrido-{$tour->uuid}.xlsx");
+    }
 }

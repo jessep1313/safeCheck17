@@ -58,6 +58,7 @@
         "concurrently": "^9.0.1",
         "filepond": "^4.32.9",
         "filepond-plugin-image-preview": "^4.6.12",
+        "framer-motion": "^12.23.26",
         "globals": "^15.14.0",
         "laravel-vite-plugin": "^2.0",
         "lucide-react": "^0.475.0",
