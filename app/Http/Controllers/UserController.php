@@ -17,11 +17,11 @@ class UserController extends Controller
     {
         $search = $request->input('search', "");
         $perPage = $request->input('per_page', 15);
-        $page = $request->input('per_page', 1);
+        $page = $request->input('page', 1);
         $sortBy = $request->input('sort_by', 'created_at');
         $sort = $request->input('sort', 'desc');
 
-        $paginator = User::select('id', 'email', 'name', 'created_at', 'updated_at', 'email_verified_at')
+        $paginator = User::select(['id', 'email', 'name', 'created_at', 'updated_at', 'email_verified_at'])
             ->orderBy($sortBy, $sort)
             ->searchValues($search)
             ->where('id', '!=', Auth::id())

@@ -30,6 +30,7 @@ class InspectionDigitalController extends Controller
 
     public function index(request $request)
     {
+        // $this->authorize("ver inspecciones digitales", Inspection::class);
         $currentPage = $request->input('page', 1);
         $perPage = $request->input('per_page', 15);
         $sort = $request->input('sort', 'desc');
@@ -68,6 +69,7 @@ class InspectionDigitalController extends Controller
 
     public function show(string $uuid)
     {
+        $this->authorize('ver inspecciones digitales', Inspection::class);
         $inspection = Inspection::where('uuid', $uuid)
         ->with(['trailers', 'points', 'vehicleType', 'certification', 'user'])
         ->firstOrFail();
@@ -147,6 +149,7 @@ class InspectionDigitalController extends Controller
 
     public function create()
     {
+        $this->authorize("crear inspeccion digital", Inspection::class);
         return Inertia::render('inspect/create', []);
     }
 
@@ -154,6 +157,7 @@ class InspectionDigitalController extends Controller
 
     public function stepPrepare(string $uuid)
     {
+        $this->authorize("crear inspeccion digital", Inspection::class);
         $inspection = Inspection::firstWhere('uuid', $uuid);
         $certificates = Certification::query()
             ->select('id', 'name')
@@ -187,6 +191,7 @@ class InspectionDigitalController extends Controller
 
     public function stepData(string $uuid)
     {
+        $this->authorize("crear inspeccion digital", Inspection::class);
         $inspection = Inspection::firstWhere('uuid', $uuid);
 
         if (! $inspection) {
@@ -207,6 +212,7 @@ class InspectionDigitalController extends Controller
 
     public function stepQuestions(string $uuid)
     {
+        $this->authorize("crear inspeccion digital", Inspection::class);
         $inspection = Inspection::firstWhere('uuid', $uuid);
 
         /**
@@ -235,6 +241,7 @@ class InspectionDigitalController extends Controller
 
     public function stepQuestion(string $uuid)
     {
+        $this->authorize("crear inspeccion digital", Inspection::class);
         $inspection = Inspection::firstWhere('uuid', $uuid);
         if ($inspection->getProblemPoint()) {
             return redirect()->route('inspections.problem-comment', ['uuid' => $uuid]);
@@ -265,6 +272,7 @@ class InspectionDigitalController extends Controller
 
     public function problemPointComment(string $uuid)
     {
+        $this->authorize("crear inspeccion digital", Inspection::class);
         $inspection = Inspection::firstWhere(['uuid' => $uuid]);
         if (! $inspection) {
             return \http_response_code(404);
@@ -294,6 +302,7 @@ class InspectionDigitalController extends Controller
 
     public function problemPointEvidence(string $uuid)
     {
+        $this->authorize("crear inspeccion digital", Inspection::class);
         $inspection = Inspection::firstWhere(['uuid' => $uuid]);
 
         if (! $inspection) {
@@ -534,6 +543,5 @@ class InspectionDigitalController extends Controller
         $filename = "$uuid.pdf";
         $pdf = Pdf::loadView("reports.inspection-points", compact('inspection'));
         return $pdf->stream($filename);
-        
     }
 }

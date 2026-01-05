@@ -16,6 +16,7 @@ import {
     ShieldQuestion,
     Truck,
     Users2,
+    UsersRound,
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -28,6 +29,7 @@ const mainNavItems: NavItem[] = [
     { title: 'Auditorías', href: '/auditorias', icon: ClipboardList },
     { title: 'Control de acceso', href: '/control-de-acceso', icon: ShieldQuestion },
     { title: 'Control de incidencias', href: '/control-de-incidencias', icon: ShieldAlert },
+    { title: 'Grupos y roles', href: '/grupos-y-roles', icon: UsersRound },
 ];
 
 const footerNavGroup: NavGroup[] = [

@@ -16,7 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CertificationSeed::class,
             VehicleTypeSeed::class,
-            TourDefaultQuestionSeed::class
+            TourDefaultQuestionSeed::class,
+            PermissionSeeder::class,
+            UserSeeder::class
         ]);
     }
 }

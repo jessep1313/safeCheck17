@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Certification;
+use App\Models\Form;
 use App\Models\InspectForm;
 use App\Models\VehicleType;
 use Illuminate\Http\Request;
@@ -15,14 +16,15 @@ class FormController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('ver formularios', InspectForm::class);
         $currentPage = $request->input('page', 1);
         $perPage = $request->input('per_page', 15);
         $sort = $request->input('sort', 'asc');
         $sortBy = $request->input('sort_by', 'created_at');
         $search = $request->input('search', "");
 
-        $certificates = Certification::select('id', 'name')->get();
-        $vehicleTypes = VehicleType::select('id', 'name')->get();
+        $certificates = Certification::select(['id', 'name'])->get();
+        $vehicleTypes = VehicleType::select(['id', 'name'])->get();
 
         $paginator = InspectForm::with(['certificate', 'vehicleType'])
             ->orderBy($sortBy, $sort)
