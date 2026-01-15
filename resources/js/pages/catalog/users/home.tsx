@@ -1,21 +1,25 @@
-import getActions from "@/components/catalog/users/actions";
-import getColumns from "@/components/catalog/users/columns";
-import Datatable from "@/components/datatable/datatable";
-import Field from "@/components/form/field";
-import Modal from "@/components/modal";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import useUser from "@/hooks/use-user";
-import AppHeader from "@/layouts/app-header"
-import AppLayout from "@/layouts/app-layout"
-import { BreadcrumbItem } from "@/types";
-import { AlertCircleIcon, Loader2, UserPlus } from "lucide-react";
+import getActions from '@/components/catalog/users/actions';
+import getColumns from '@/components/catalog/users/columns';
+import Datatable from '@/components/datatable/datatable';
+import Field from '@/components/form/field';
+import FieldSelect from '@/components/form/field-select';
+import Modal from '@/components/modal';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import useUser from '@/hooks/use-user';
+import AppHeader from '@/layouts/app-header';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem, CatalogItem, SelectOption } from '@/types';
+import { usePage } from '@inertiajs/react';
+import { AlertCircleIcon, Loader2, UserPlus } from 'lucide-react';
 
-export default ({ }) => {
+export default ({}) => {
+    const { groups } = usePage().props;
+    const groupOptions: SelectOption[] = (groups as CatalogItem[]).map((opt) => ({ label: opt.name, value: opt.id }));
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/' },
-        { title: 'Usuarios', href: '/usuarios' }
+        { title: 'Usuarios', href: '/usuarios' },
     ];
 
     const {
@@ -31,17 +35,14 @@ export default ({ }) => {
         open,
         processing,
         editable,
-    } = useUser()
+    } = useUser();
 
-    const columns = getColumns()
-    const actions = getActions({ handleEdit: handleOpenEdit, handleDelete, handleRefreshPass })
+    const columns = getColumns();
+    const actions = getActions({ handleEdit: handleOpenEdit, handleDelete, handleRefreshPass });
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <AppHeader
-                title="Usuarios"
-                text="Administra los usuarios de la plataforma"
-            >
+            <AppHeader title="Usuarios" text="Administra los usuarios de la plataforma">
                 <Button onClick={handleOpenCreate}>
                     Nuevo usuario
                     <UserPlus />
@@ -62,24 +63,16 @@ export default ({ }) => {
             <Modal
                 open={open}
                 onHide={handleHiddenModal}
-                title={editable ? `${data.name}` : "Nuevo usuario"}
-                description={editable ? "Actualiza la información y guarda los cambios." : "Completa los campos para crear el usuario."}
+                title={editable ? `${data.name}` : 'Nuevo usuario'}
+                description={editable ? 'Actualiza la información y guarda los cambios.' : 'Completa los campos para crear el usuario.'}
                 actions={
-                    <Button
-                        type="submit"
-                        disabled={processing}
-                        form="form"
-                    >
-                        {processing && (<Loader2 className="animate-spin" />)}
-                        {editable ? "Guardar usuario" : "Guardar cambios"}
+                    <Button type="submit" disabled={processing} form="form">
+                        {processing && <Loader2 className="animate-spin" />}
+                        {editable ? 'Guardar usuario' : 'Guardar cambios'}
                     </Button>
                 }
             >
-                <form
-                    className="flex flex-col gap-4"
-                    id="form"
-                    onSubmit={handleSubmit}
-                >
+                <form className="flex flex-col gap-4" id="form" onSubmit={handleSubmit}>
                     <Field
                         id="inpName"
                         name="name"
@@ -101,6 +94,8 @@ export default ({ }) => {
                         required
                     />
 
+                    <FieldSelect id="selectInputGroup" name="group" placeholder="Selecciona un grupo" label="Grupo" required options={groupOptions} />
+
                     {!editable && (
                         <Alert>
                             <AlertCircleIcon />
@@ -111,5 +106,5 @@ export default ({ }) => {
                 </form>
             </Modal>
         </AppLayout>
-    )
-}
+    );
+};

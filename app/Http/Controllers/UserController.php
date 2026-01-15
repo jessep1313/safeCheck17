@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -38,6 +39,7 @@ class UserController extends Controller
             ]);
 
         return Inertia::render('catalog/users/home', [
+            "groups" => Role::select(['id', 'name'])->get(),
             "paginator" => $paginator,
             "filter" => [
                 "per_page" => $perPage,

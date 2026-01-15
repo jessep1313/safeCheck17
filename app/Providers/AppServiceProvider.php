@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Access;
 use App\Models\Audit;
 use App\Models\Form;
 use App\Models\InspectForm;
 use App\Models\Inspection;
 use App\Models\Tour;
+use App\Observers\AccessObserver;
 use App\Observers\AuditObserver;
 use App\Observers\InspectFormObserver;
 use App\Observers\InspectionObserver;
@@ -36,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
         Inspection::observe(InspectionObserver::class);
         Audit::observe(AuditObserver::class);
         Tour::observe(TourObserver::class);
+        Access::observe(AccessObserver::class);
+
         Inertia::share([
             'csrf_token' => fn() => csrf_token()
         ]);

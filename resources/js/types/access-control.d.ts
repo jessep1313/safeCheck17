@@ -1,0 +1,40 @@
+import { CatalogItem } from "."
+
+export type Access = {
+    id: number
+    uuid: string
+    name: string
+    contractor: string
+    building: string
+    booth: string
+    motive: string
+    vehicles: string
+    tools: string
+    expires: string
+    created_at: string
+}
+
+export type AccessDetail = {
+    id: number,
+    uuid: string,
+    name: string,
+    contractor?: string
+    building: CatalogItem,
+    booth: CatalogItem,
+    motive: string,
+    moves: [],
+    vehicles: [],
+    tools: [],
+    devices: [],
+    expires: string
+    created_at: string
+}
+
+export type AccessCreateBody = {
+    name: string
+    contractor: string
+    building_id: string
+    booth_id: string
+    motive: string
+    expires: string
+}

@@ -8,5 +8,9 @@ Route::prefix('control-de-acceso')
     ->group(function () {
 
         Route::get('/', [AccessControlController::class, 'index'])->name('home');
+        Route::get('/nuevo-acceso', [AccessControlController::class, 'create'])->name('create');
+        Route::get('/{uuid}', [AccessControlController::class, 'show'])->name('show');
+
+        Route::post('/', [AccessControlController::class, 'store'])->name('store');
 
     });

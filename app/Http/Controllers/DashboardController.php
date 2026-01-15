@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Access;
 use App\Models\Inspection;
 use App\Models\Tour;
 use Illuminate\Http\Request;
@@ -12,10 +13,11 @@ class DashboardController extends Controller
 
     // LINK View Dashboard
 
-    public function index () {
+    public function index()
+    {
         $inpsectionAllCount = $this->formatNumber(Inspection::count() ?? 0);
         $toursAllCount = $this->formatNumber(Tour::count() ?? 0);
-        $accessCurrentDay = $this->formatNumber(0);
+        $accessCurrentDay = $this->formatNumber(Access::whereToday('created_at')->count() ?? 0);
 
         $chartTourData = [
             ["category" => "notIncidence", "quantity" => Tour::notIncidences()->count() ?? 0, "fill" => "var(--color-chart-2)"],

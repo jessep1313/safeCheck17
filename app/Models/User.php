@@ -74,6 +74,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Inspection::class, 'guard_id');
     }
 
+    public function accesses()
+    {
+        return $this->hasMany(Access::class, 'user_by_id');
+    }
+
     // !SECTION FIN RELATIONSHIPS
 
 }

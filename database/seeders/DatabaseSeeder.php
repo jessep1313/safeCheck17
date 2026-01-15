@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             VehicleTypeSeed::class,
             TourDefaultQuestionSeed::class,
             PermissionSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
         ]);
     }
 }
