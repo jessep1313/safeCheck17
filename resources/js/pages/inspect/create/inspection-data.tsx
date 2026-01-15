@@ -55,6 +55,7 @@ export default () => {
                         name="customer_name"
                         label="Nombre del cliente"
                         value={data.customer_name}
+                        error={errors.customer_name}
                         onChange={handleChangeInput}
                         required
                     />
