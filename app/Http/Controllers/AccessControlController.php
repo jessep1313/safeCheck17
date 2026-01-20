@@ -60,7 +60,7 @@ class AccessControlController extends Controller
 
     public function show(string $uuid)
     {
-        $access = Access::with(['building', 'booth'])->firstWhere('uuid', $uuid);
+        $access = Access::with(['building', 'booth', 'vehicles'])->firstWhere('uuid', $uuid);
         if (!$access) {
             return http_response_code(404);
         }
@@ -68,8 +68,7 @@ class AccessControlController extends Controller
         $data = $access->toArray();
         $data["created_at"] = $access->created_at->format('d/F/Y');
 
-
-        return Inertia::render('controlAccess/show', ["data" => $data, "uuid" => $access->uuid]);
+        return Inertia::render('controlAccess/show', ["data" => $data, "uuid" => $access->uuid, 'accessId' => $access->id, 'vehicles' => $access["vehicles"]]);
     }
 
 

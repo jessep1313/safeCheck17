@@ -39,4 +39,8 @@ class Access extends Model
     public function booth () {
         return $this->belongsTo(Booth::class);
     }
+
+    public function vehicles() {
+        return $this->hasMany(AccessVehicle::class);
+    }
 }

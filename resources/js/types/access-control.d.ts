@@ -38,3 +38,9 @@ export type AccessCreateBody = {
     motive: string
     expires: string
 }
+
+export type AccessVehicleBody = {
+    plate: string
+    model: string
+    color: string
+}

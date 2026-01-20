@@ -10,9 +10,10 @@ interface Props {
     name: string;
     children: ReactNode;
     isEmpty?: boolean;
+    onOpen?: () => void;
 }
 
-export default ({ title, description, children, isEmpty = true, name }: Props) => {
+export default ({ title, description, children, isEmpty = true, name, onOpen }: Props) => {
     return (
         <Card>
             <CardHeader className="flex justify-between">
@@ -20,9 +21,11 @@ export default ({ title, description, children, isEmpty = true, name }: Props) =
                     <CardTitle className="mb-1">{title}</CardTitle>
                     <CardDescription>{description}</CardDescription>
                 </div>
-                <Button size={'icon'}>
-                    <Plus />
-                </Button>
+                {onOpen && (
+                    <Button size={'icon'} onClick={onOpen}>
+                        <Plus />
+                    </Button>
+                )}
             </CardHeader>
             <CardContent>
                 {isEmpty ? (

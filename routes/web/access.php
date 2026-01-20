@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccessControlController;
+use App\Http\Controllers\AccessVehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('control-de-acceso')
@@ -10,7 +11,14 @@ Route::prefix('control-de-acceso')
         Route::get('/', [AccessControlController::class, 'index'])->name('home');
         Route::get('/nuevo-acceso', [AccessControlController::class, 'create'])->name('create');
         Route::get('/{uuid}', [AccessControlController::class, 'show'])->name('show');
-
         Route::post('/', [AccessControlController::class, 'store'])->name('store');
+
+
+        // Vehicles
+        Route::as('vehicle.')->group(function () {
+            Route::post('/{id}/vehicle', [AccessVehicleController::class, 'store'])->name('store');
+            Route::put('/{id}/vehicle', [AccessVehicleController::class, 'update'])->name('update');
+            Route::delete('/{id}/vehicle', [AccessVehicleController::class, 'destroy'])->name('delete');
+        });
 
     });
