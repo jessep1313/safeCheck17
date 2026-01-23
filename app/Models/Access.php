@@ -43,4 +43,8 @@ class Access extends Model
     public function vehicles() {
         return $this->hasMany(AccessVehicle::class);
     }
+
+    public function tools () {
+        return $this->hasMany(AccessTool::class);
+    }
 }

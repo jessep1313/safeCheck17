@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccessControlController;
+use App\Http\Controllers\AccessToolController;
 use App\Http\Controllers\AccessVehicleController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,13 @@ Route::prefix('control-de-acceso')
             Route::post('/{id}/vehicle', [AccessVehicleController::class, 'store'])->name('store');
             Route::put('/{id}/vehicle', [AccessVehicleController::class, 'update'])->name('update');
             Route::delete('/{id}/vehicle', [AccessVehicleController::class, 'destroy'])->name('delete');
+        });
+
+        // Herramientas
+        Route::as('tool.')->group(function () {
+            Route::post('/{id}/tool', [AccessToolController::class, 'store'])->name('store');
+            Route::put('/{id}/tool', [AccessToolController::class, 'update'])->name('update');
+            Route::delete('/{id}/tool', [AccessToolController::class, 'destroy'])->name('delete');
         });
 
     });

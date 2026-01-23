@@ -44,3 +44,16 @@ export type AccessVehicleBody = {
     model: string
     color: string
 }
+
+export type AccessToolBody = {
+    type: string
+    brand: string
+    model: string
+    quantity: string
+}
+
+export type AccessTool = {
+    id: number
+    created_at: string
+    updated_at: string
+} & AccessToolBody
