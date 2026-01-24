@@ -122,6 +122,6 @@ class AccessControlController extends Controller
     public function store(AccessCreateRequest $request)
     {
         $newAccess = Access::create($request->all());
-        return redirect()->route('access-control.show', ['uuid' => $newAccess->uuid]);
+        return redirect()->route('access-control.create.vehicles', ['uuid' => $newAccess->uuid]);
     }
 }
