@@ -10,6 +10,8 @@ import VehiclesTable from "@/components/accessControl/show/vehicles-table"
 import ToolsTable from "@/components/accessControl/show/tools-table"
 import DevicesTable from "@/components/accessControl/show/devices-table"
 import Identification from "@/components/accessControl/show/identification"
+import { Item, ItemDescription, ItemHeader, ItemMedia, ItemTitle } from "@/components/ui/item"
+import { User } from "lucide-react"
 
 interface Props extends PageProps {
     uuid: string,
@@ -30,6 +32,19 @@ export default () => {
         <AppLayout breadcrumbs={breadcrumbs}>
             <section className="p-4 flex flex-col gap-4">
                 <FirstDataTop booth={data.booth.name} building={data.building.name} created_at={data.created_at} />
+                {data.who_visits && (
+                    <Item variant={'outline'}>
+                        <ItemHeader>
+                            <div>
+                                <ItemDescription className="mb-1">Visita a:</ItemDescription>
+                                <ItemTitle>{data.who_visits}</ItemTitle>
+                            </div>
+                            <ItemMedia variant={'icon'}>
+                                <User />
+                            </ItemMedia>
+                        </ItemHeader>
+                    </Item>
+                )}
                 <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <VisitorProfile name={data.name} motive={data.motive} contractor={data.contractor} />
                     <Stats />
