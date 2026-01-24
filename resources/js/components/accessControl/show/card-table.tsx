@@ -27,7 +27,7 @@ export default ({ title, description, children, isEmpty = true, name, onOpen }: 
                     </Button>
                 )}
             </CardHeader>
-            <CardContent>
+            <CardContent className='h-[200px] overflow-auto'>
                 {isEmpty ? (
                     <Empty>
                         <EmptyTitle>No hay {name}</EmptyTitle>

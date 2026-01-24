@@ -11,6 +11,8 @@ class Access extends Model
         'building_id',
         'booth_id',
         'uuid',
+        'who_visits',
+        'identification',
         'name',
         'contractor',
         'type',

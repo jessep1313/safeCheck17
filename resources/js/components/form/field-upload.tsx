@@ -12,7 +12,7 @@ interface FieldUploadProps extends FileUploadProps {
 export default ({ label, name, setData, placeholder, error, required, ...props }: FieldUploadProps) => {
     return (
         <div>
-            <Label>
+            <Label className='mb-2 inline-block'>
                 {label} {required && <RequiredTag />}
             </Label>
             <FileUpload name={name} setData={setData} placeholder={placeholder} {...props} />

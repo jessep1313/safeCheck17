@@ -20,6 +20,8 @@ export type AccessDetail = {
     uuid: string,
     name: string,
     contractor?: string
+    identification: string
+    who_visits?: string
     building: CatalogItem,
     booth: CatalogItem,
     motive: string,

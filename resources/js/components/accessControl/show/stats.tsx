@@ -1,12 +1,24 @@
 import { Item, ItemContent, ItemDescription, ItemHeader, ItemMedia, ItemTitle } from '@/components/ui/item';
-import { Calendar, Truck, Wrench } from 'lucide-react';
+import { AccessDetail, AccessDeviceBody, AccessToolBody, AccessVehicleBody } from '@/types/access-control';
+import { usePage } from '@inertiajs/react';
+import { PageProps } from '@inertiajs/core';
+import { Calendar, Hammer, List, Smartphone, Truck } from 'lucide-react';
+
+interface Props extends PageProps {
+    data: AccessDetail,
+}
 
 export default () => {
+
+    const { data } = usePage<Props>().props;
+
+    const totalElements = data.vehicles.length + data.tools.length + data.devices.length;
+
     const stats = [
-        { title: 'Visitas del día', value: '00', icon: Calendar },
-        { title: 'Salidas del día', value: '00', icon: Calendar },
-        { title: 'Vehiculos dentro', value: '00', icon: Truck },
-        { title: 'Extras', value: '00', icon: Wrench },
+        { title: 'Total de ingresos', value: totalElements, icon: List },
+        { title: 'Unidades dentro', value: data.vehicles.length, icon: Truck },
+        { title: 'Herramientas', value: data.tools.length, icon: Hammer },
+        { title: 'Dispositivos', value: data.devices.length, icon: Smartphone },
     ];
 
     return (

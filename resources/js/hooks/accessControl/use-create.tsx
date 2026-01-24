@@ -13,13 +13,14 @@ export default () => {
 
     const { booths: rawBooths, buildings: rawBuildings } = usePage<Props>().props
 
-    const booths: SelectOption[] = rawBooths.map(opt => ({label: opt.name, value: opt.id}));
-    const buildings: SelectOption[] = rawBuildings.map(opt => ({label: opt.name, value: opt.id}));
+    const booths: SelectOption[] = rawBooths.map(opt => ({ label: opt.name, value: opt.id }));
+    const buildings: SelectOption[] = rawBuildings.map(opt => ({ label: opt.name, value: opt.id }));
 
-    const {data, setData, errors, processing, post} = useForm({
+    const { data, setData, errors, processing, post } = useForm({
         building_id: "",
         booth_id: "",
         name: "",
+        who_visits: "",
         contractor: "",
         motive: "",
         expires: ""
@@ -41,7 +42,7 @@ export default () => {
         onSubmit,
         onChange,
         errors,
-        processing, 
+        processing,
         booths,
         buildings
     }

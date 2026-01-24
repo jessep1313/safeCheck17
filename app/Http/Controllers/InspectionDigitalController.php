@@ -502,7 +502,7 @@ class InspectionDigitalController extends Controller
             return back()->withErrors(['files' => 'No hay archivos']);
         }
 
-        $validated = $request->validate([
+        $request->validate([
             'files' => 'required|array|min:1',
             'files.*' => 'required|file|image|mimes:jpeg,png,jpg|max:20480',
         ]);
