@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AccessCreateRequest;
 use App\Models\Access;
+use App\Models\AccessTool;
 use App\Models\Booth;
 use App\Models\Building;
 use Illuminate\Http\Request;
@@ -55,6 +56,42 @@ class AccessControlController extends Controller
         return Inertia::render('controlAccess/create', [
             "buildings" => Building::select(['id', 'name'])->get(),
             "booths" => Booth::select(['id', 'name'])->get(),
+        ]);
+    }
+
+    public function createTools (string $uuid) {
+        $access = Access::firstWhere('uuid', $uuid);
+        if(!$access) {
+            return http_response_code(404);
+        }
+        return Inertia::render('controlAccess/create/tools', [
+            'tools' => $access->tools,
+            'uuid' => $access->uuid,
+            'accessId' => $access->id
+        ]);
+    }
+
+    public function createDevices (string $uuid) {
+        $access = Access::firstWhere('uuid', $uuid);
+        if(!$access) {
+            return http_response_code(404);
+        }
+        return Inertia::render('controlAccess/create/devices', [
+            'devices' => $access->devices,
+            'uuid' => $access->uuid,
+            'accessId' => $access->id
+        ]);
+    }
+
+    public function createVehicles (string $uuid) {
+        $access = Access::firstWhere('uuid', $uuid);
+        if(!$access) {
+            return http_response_code(404);
+        }
+        return Inertia::render('controlAccess/create/vehicles', [
+            'vehicles' => $access->vehicles,
+            'uuid' => $access->uuid,
+            'accessId' => $access->id
         ]);
     }
 

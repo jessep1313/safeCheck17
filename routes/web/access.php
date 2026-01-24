@@ -15,6 +15,13 @@ Route::prefix('control-de-acceso')
         Route::get('/{uuid}', [AccessControlController::class, 'show'])->name('show');
         Route::post('/', [AccessControlController::class, 'store'])->name('store');
 
+        // Add All
+        Route::prefix('/nuevo-acceso/{uuid}')->as('create.')->group(function () {
+            Route::get('/herramientas', [AccessControlController::class, 'createTools'])->name('tools');
+            Route::get('/dispositivos', [AccessControlController::class, 'createDevices'])->name('devices');
+            Route::get('/vehiculos', [AccessControlController::class, 'createVehicles'])->name('vehicles');
+        });
+
         // Vehicles
         Route::as('vehicle.')->group(function () {
             Route::post('/{id}/vehicle', [AccessVehicleController::class, 'store'])->name('store');

@@ -74,3 +74,9 @@ export type AccessDevice = {
     created_at: string
     updated_at: string
 } & AccessDeviceBody
+
+export type AccessItem = {
+    id: number,
+    title: string,
+    description: string
+}

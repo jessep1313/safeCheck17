@@ -13,7 +13,6 @@ interface Props extends PageProps {
 export default () => {
 
     const { accessId, vehicles } = usePage<Props>().props
-    console.log(vehicles)
     const [openForm, setOpenForm] = useState(false)
     const [vehicleId, setVehicleId] = useState<number | null>();
     const { data, setData, processing, post, errors, reset, put, delete: destroy } = useForm({
@@ -88,6 +87,7 @@ export default () => {
         handleDelete,
         onSubmit,
         onChange,
+        accessId,
         vehicleId
     }
 }
