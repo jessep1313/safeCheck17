@@ -12,13 +12,13 @@ export default () => {
 
     const { data } = usePage<Props>().props;
 
-    const totalElements = data.vehicles.length + data.tools.length + data.devices.length;
+    const totalElements = data.vehicles_count + data.tools_count + data.devices_count;
 
     const stats = [
         { title: 'Total de ingresos', value: totalElements, icon: List },
-        { title: 'Unidades dentro', value: data.vehicles.length, icon: Truck },
-        { title: 'Herramientas', value: data.tools.length, icon: Hammer },
-        { title: 'Dispositivos', value: data.devices.length, icon: Smartphone },
+        { title: 'Unidades dentro', value: data.vehicles_count, icon: Truck },
+        { title: 'Herramientas', value: data.tools_count, icon: Hammer },
+        { title: 'Dispositivos', value: data.devices_count, icon: Smartphone },
     ];
 
     return (

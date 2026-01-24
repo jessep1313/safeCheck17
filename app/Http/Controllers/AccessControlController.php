@@ -32,8 +32,8 @@ class AccessControlController extends Controller
                 'booth' => $row->booth->name,
                 'motive' => $row->motive,
                 'vehicles' => $row->vehicles->count(),
-                'tools' => $row->tools->count(),
-                'devices' => $row->devices->count(),
+                'tools' => $row->tools->sum('quantity'),
+                'devices' => $row->devices->sum('quantity'),
                 'expires' => $row->expires->format('d/m/Y, h:i a'),
                 'created_at' => $row->created_at->format('d/m/Y, h:i a')
             ]);
@@ -104,6 +104,9 @@ class AccessControlController extends Controller
 
         $data = $access->toArray();
         $data["created_at"] = $access->created_at->format('d/F/Y');
+        $data['vehicles_count'] = $access->vehicles->count();
+        $data['tools_count'] = $access->tools->sum('quantity');
+        $data['devices_count'] = $access->devices->sum('quantity');
 
         return Inertia::render('controlAccess/show', [
             "data" => $data, 

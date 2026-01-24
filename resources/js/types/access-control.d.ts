@@ -25,10 +25,12 @@ export type AccessDetail = {
     building: CatalogItem,
     booth: CatalogItem,
     motive: string,
-    moves: [],
     vehicles: [],
     tools: [],
     devices: [],
+    vehicles_count: number,
+    tools_count: number,
+    devices_count: number,
     expires: string
     created_at: string
 }
