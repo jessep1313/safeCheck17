@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('access_tools', function (Blueprint $table) {
+        Schema::create('access_devices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('access_id')->constrained('accesses')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('type', 50);
-            $table->string('brand', 50)->nullable();
-            $table->string('model', 50)->nullable();
+            $table->string('type', 100);
+            $table->string('brand', 100);
+            $table->string('model', 100);
             $table->integer('quantity')->default(1);
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('access_tools');
+        Schema::dropIfExists('access_devices');
     }
 };

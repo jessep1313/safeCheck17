@@ -1,5 +1,7 @@
 import { Access } from "@/types/access-control";
 import { ColumnDef } from "@/types/datatable";
+import { Badge } from "../ui/badge";
+import { Hammer, Smartphone, Truck } from "lucide-react";
 
 export default (): ColumnDef<Access>[] => [
     {
@@ -20,6 +22,14 @@ export default (): ColumnDef<Access>[] => [
         key: "booth",
     },
     {
+        header: "Ingresados",
+        cell: (row) => <span className="flex gap-1">
+            <Badge variant={'outline'}><Truck /> {row.vehicles}</Badge>
+            <Badge variant={'outline'}><Smartphone /> {row.devices}</Badge>
+            <Badge variant={'outline'}><Hammer /> {row.tools}</Badge>
+        </span>
+    },
+    {
         header: "Fecha de ingreso",
         key: "created_at",
         sortable: true,
@@ -27,7 +37,7 @@ export default (): ColumnDef<Access>[] => [
         align: "end"
     },
     {
-        header:  "Expiración",
+        header: "Expiración",
         key: 'expires',
         sortable: true,
         columnType: "date",

@@ -19,7 +19,7 @@ class AccessControlController extends Controller
         $sortBy = $request->get('sort_by', 'created_at');
         $sort = $request->get('sort', 'desc');
 
-        $paginator = Access::with(['booth', 'userBy', 'building'])
+        $paginator = Access::with(['booth', 'userBy', 'building', 'vehicles', 'tools', 'devices'])
             ->orderBy($sortBy, $sort)
             ->paginate(perPage: $perPage, page: $currentPage)
             ->through(fn($row) => [
@@ -30,9 +30,9 @@ class AccessControlController extends Controller
                 'building' => $row->building->name,
                 'booth' => $row->booth->name,
                 'motive' => $row->motive,
-                'vehicles' => 1,
-                'tools' => 1,
-                'devices' => 1,
+                'vehicles' => $row->vehicles->count(),
+                'tools' => $row->tools->count(),
+                'devices' => $row->devices->count(),
                 'expires' => $row->expires->format('d/m/Y, h:i a'),
                 'created_at' => $row->created_at->format('d/m/Y, h:i a')
             ]);
@@ -60,7 +60,7 @@ class AccessControlController extends Controller
 
     public function show(string $uuid)
     {
-        $access = Access::with(['building', 'booth', 'vehicles', 'tools'])->firstWhere('uuid', $uuid);
+        $access = Access::with(['building', 'booth', 'vehicles', 'tools', 'devices'])->firstWhere('uuid', $uuid);
         if (!$access) {
             return http_response_code(404);
         }
@@ -73,7 +73,8 @@ class AccessControlController extends Controller
             "uuid" => $access->uuid, 
             'accessId' => $access->id, 
             'vehicles' => $access["vehicles"], 
-            'tools' => $access["tools"]
+            'tools' => $access["tools"], 
+            'devices' => $access["devices"]
         ]);
     }
 

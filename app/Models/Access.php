@@ -47,4 +47,8 @@ class Access extends Model
     public function tools () {
         return $this->hasMany(AccessTool::class);
     }
+
+    public function devices () {
+        return $this->hasMany(AccessDevice::class);
+    }
 }

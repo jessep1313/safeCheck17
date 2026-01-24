@@ -10,6 +10,7 @@ export type Access = {
     motive: string
     vehicles: string
     tools: string
+    devices: string
     expires: string
     created_at: string
 }
@@ -52,8 +53,22 @@ export type AccessToolBody = {
     quantity: string
 }
 
+export type AccessDeviceBody = {
+    type: string
+    brand: string
+    model: string
+    quantity: string
+}
+
+
 export type AccessTool = {
     id: number
     created_at: string
     updated_at: string
 } & AccessToolBody
+
+export type AccessDevice = {
+    id: number
+    created_at: string
+    updated_at: string
+} & AccessDeviceBody
