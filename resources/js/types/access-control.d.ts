@@ -82,3 +82,10 @@ export type AccessItem = {
     title: string,
     description: string
 }
+
+export type AccessFilter = {
+    check_in: string
+    check_out: string
+    building_id: string
+    booth_id: string
+}

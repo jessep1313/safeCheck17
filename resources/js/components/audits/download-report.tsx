@@ -5,7 +5,7 @@ interface Props {
     href: string
 }
 
-export default ({href}: Props) => {
+export default ({ href }: Props) => {
     return (
         <a target="_blank" href={href} download>
             <Item variant={'muted'}>

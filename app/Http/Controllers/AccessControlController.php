@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AccessCreateRequest;
 use App\Models\Access;
-use App\Models\AccessTool;
 use App\Models\Booth;
 use App\Models\Building;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,9 +19,12 @@ class AccessControlController extends Controller
         $perPage = $request->get('per_page', 15);
         $sortBy = $request->get('sort_by', 'created_at');
         $sort = $request->get('sort', 'desc');
+        $checkIn = $request->get('check_in');
+        $checkOut = $request->get('check_out');
 
         $paginator = Access::with(['booth', 'userBy', 'building', 'vehicles', 'tools', 'devices'])
             ->orderBy($sortBy, $sort)
+            ->dateCheckIn($checkIn, $checkOut)
             ->paginate(perPage: $perPage, page: $currentPage)
             ->through(fn($row) => [
                 'id' => $row->id,
@@ -46,6 +49,8 @@ class AccessControlController extends Controller
                 "page" => $currentPage,
                 "sort_by" => $sortBy,
                 "sort" => $sort,
+                "check_in" => $checkIn,
+                "check_out" => $checkOut,
                 "search" => $search
             ]
         ]);
@@ -123,5 +128,28 @@ class AccessControlController extends Controller
     {
         $newAccess = Access::create($request->all());
         return redirect()->route('access-control.create.vehicles', ['uuid' => $newAccess->uuid]);
+    }
+
+    public function exportPdfList (Request $request) {
+        $checkIn = $request->get('check_in', "");
+        $checkOut = $request->get('check_out', "");
+        
+        $accesses = Access::with(['userBy', 'vehicles'])
+        ->dateCheckIn($checkIn, $checkOut)
+        ->get()
+        ->map(fn ($access) => [
+            'name' => $access->name,
+            'checkIn' => $access->created_at ? $access->created_at->format('d/m/Y, h:i a') : '---',
+            'motive' => $access->motive,
+            'authorizedBy' => $access->userBy->name,
+            'checkOut' => $access->check_out ? $access->check_out->format('d/m/Y, h:i a') : '---',
+            'vehicle' => $access->vehicles->count() > 0 ? $access->vehicles->pluck('plate')->join(', ') : '---',
+        ]);
+        $fileName = "access-control-" . date('ymdhis') . ".pdf";
+        $pdf = Pdf::loadView('reports.access-control.list', [
+            'accesses' => $accesses
+        ])
+            ->setPaper('legal', 'landscape');
+        return $pdf->download($fileName);
     }
 }

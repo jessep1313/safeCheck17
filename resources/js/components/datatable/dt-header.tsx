@@ -22,12 +22,12 @@ const DtHeader = ({ children, routeName, filter, searchPlaceholder = 'Buscar . .
 
     const onSearchClick = () => {
         setSearchValue(filter.search)
-        router.get(route(routeName), {...filter, search: searchValue}, {preserveScroll: true, preserveState: true})
+        router.get(route(routeName), { ...filter, search: searchValue }, { preserveScroll: true, preserveState: true })
     }
 
     const onSearchClear = () => {
         setSearchValue('')
-        router.get(route(routeName), {...filter, search: ''}, {preserveScroll: true, preserveState: true})
+        router.get(route(routeName), { ...filter, search: '' }, { preserveScroll: true, preserveState: true })
     }
 
     return (

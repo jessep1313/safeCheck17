@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('assets/styles/inspection-pdf.css') }}" type="text/css">
-    <title>Reporte</title>
+    <title>{{ $title }} - SafeCheck</title>
+    <style>
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
 </head>
 
 <body>

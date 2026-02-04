@@ -43,4 +43,9 @@ Route::prefix('control-de-acceso')
             Route::delete('/{id}/device', [AccessDeviceController::class, 'destroy'])->name('delete');
         });
 
+        // Reportes
+        Route::as('report.')->prefix('reportes')->group(function () {
+            Route::get('/pdf/lista', [AccessControlController::class, 'exportPdfList'])->name('pdf.list');
+        });
+
     });

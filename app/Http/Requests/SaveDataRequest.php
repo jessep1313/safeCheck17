@@ -23,12 +23,12 @@ class SaveDataRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_transport' => ['required', 'string', 'min:4', 'max:100'],
-            'company_property' => ['required', 'string', 'min:4', 'max:100'],
+            'company_transport' => ['required', 'string', 'min:3', 'max:100'],
+            'company_property' => ['required', 'string', 'min:3', 'max:100'],
             'plate_number' => ['required', 'string', 'max:20'],
-            'customer_name' => ['required', 'string', 'max:125', 'min:8'],
-            'driver_name' => ['required', 'string', 'min:8', 'max:125'],
-            'guard_name' => ['required', 'string', 'min:8', 'max:125'],
+            'customer_name' => ['required', 'string', 'max:125', 'min:3'],
+            'driver_name' => ['required', 'string', 'min:3', 'max:125'],
+            'guard_name' => ['required', 'string', 'min:3', 'max:125'],
             'trailers' => ['bail', 'required', 'array', 'min:1'],
             'trailers.*.id' => ['nullable', 'integer', 'exists:inspection_trailers,id'],
             'trailers.*.plate' => ['bail', 'required', 'string', 'max:20'],

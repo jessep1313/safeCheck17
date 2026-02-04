@@ -27,7 +27,6 @@ return new class extends Migration
             $table->dateTime('expires')->nullable();
             $table->dateTime('check_out')->nullable();
             $table->dateTime('check_in')->nullable();
-            $table->boolean('has_vehicle')->default(false);
             $table->timestamps();
         });
 

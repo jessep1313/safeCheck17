@@ -17,11 +17,12 @@ interface DataTableProps<T> {
     routeName: string;
     actions?: DataTableRowAction<T>[];
     fixedActions?: boolean
+    headerActions?: React.ReactNode
 }
 
 export type AlignColumn = 'left' | 'center' | 'right';
 
-export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, routeName, actions = [], fixedActions = true }: DataTableProps<T>) => {
+export default <T,>({ headerActions, columns, createLabel, onCreate, createLink, emptyMessage, routeName, actions = [], fixedActions = true }: DataTableProps<T>) => {
     const { filter, paginator } = usePage<DataTablePageProps<T>>().props;
 
     const onChangePerPage = (per_page: string) => {
@@ -38,7 +39,9 @@ export default <T,>({ columns, createLabel, onCreate, createLink, emptyMessage, 
             <DtHeader
                 filter={filter}
                 routeName={routeName}
-            />
+            >
+                {headerActions}
+            </DtHeader>
 
             <section>
                 <Table>
