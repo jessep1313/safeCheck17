@@ -46,6 +46,7 @@ Route::prefix('control-de-acceso')
         // Reportes
         Route::as('report.')->prefix('reportes')->group(function () {
             Route::get('/pdf/lista', [AccessControlController::class, 'exportPdfList'])->name('pdf.list');
+            Route::get('/excel/lista', [AccessControlController::class, 'exportExcelList'])->name('excel.list');
         });
 
     });

@@ -16,7 +16,7 @@ export default () => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button variant={'outline'} size={'icon'} asChild>
-                            <a href={'#'}>
+                            <a href={route('access-control.report.excel.list', data)}>
                                 <FileX />
                             </a>
                         </Button>

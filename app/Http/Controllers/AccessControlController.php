@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportAccessControlList;
 use App\Http\Requests\AccessCreateRequest;
 use App\Models\Access;
 use App\Models\Booth;
@@ -9,7 +10,7 @@ use App\Models\Building;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Maatwebsite\Excel\Facades\Excel;
 class AccessControlController extends Controller
 {
     public function index(Request $request)
@@ -145,11 +146,19 @@ class AccessControlController extends Controller
             'checkOut' => $access->check_out ? $access->check_out->format('d/m/Y, h:i a') : '---',
             'vehicle' => $access->vehicles->count() > 0 ? $access->vehicles->pluck('plate')->join(', ') : '---',
         ]);
-        $fileName = "access-control-" . date('ymdhis') . ".pdf";
+        $fileName = "control-de-acceso-" . date('ymdhis') . ".pdf";
         $pdf = Pdf::loadView('reports.access-control.list', [
             'accesses' => $accesses
         ])
             ->setPaper('legal', 'landscape');
         return $pdf->download($fileName);
+    }
+
+    public function exportExcelList (Request $request) {
+        $fromDate = $request->get('check_in', "");
+        $toDate = $request->get('check_out', "");
+        $fileName = "control-de-acceso-" . date('ymdhis') . ".xlsx";
+
+        return Excel::download(new ExportAccessControlList($fromDate, $toDate), $fileName);
     }
 }
