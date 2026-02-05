@@ -161,4 +161,16 @@ class AccessControlController extends Controller
 
         return Excel::download(new ExportAccessControlList($fromDate, $toDate), $fileName);
     }
+
+    public function exportPdfShow (string $uuid) {
+        $access = Access::with([])->firstWhere('uuid', $uuid);
+        if(!$access) {
+            abort (404, 'No se encontró el registro');
+        }
+
+        $pdf = Pdf::loadView('reports.access-control.show', [
+            'access' => $access
+        ]);
+        return $pdf->stream('control-de-acceso-' . $uuid . '.pdf');
+    }
 }

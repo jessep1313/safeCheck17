@@ -1,16 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Link } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 import { Building, Calendar, FileDown, FileX, Siren } from "lucide-react";
 
 interface Props {
     building: string
     booth: string
     created_at: string
+
 }
 
 export default ({ building, booth, created_at }: Props) => {
+
+    const { uuid } = usePage<{ uuid: string }>().props;
 
     const elements = [
         { title: `${building}`, icon: Building },
@@ -33,33 +36,21 @@ export default ({ building, booth, created_at }: Props) => {
                 ))}
             </ul>
             <ButtonGroup>
-                <ButtonGroupText>Descargar</ButtonGroupText>
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button variant={'secondary'} asChild>
-                            <Link>
+                            <a href={route('access-control.report.pdf.show', { uuid })}>
                                 PDF
                                 <FileDown />
-                            </Link>
+                            </a>
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>Descargar en formato PDF</p>
                     </TooltipContent>
                 </Tooltip>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button variant={'secondary'} asChild>
-                            <Link>
-                                Excel
-                                <FileX />
-                            </Link>
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Descargar en formato XLSX</p>
-                    </TooltipContent>
-                </Tooltip>
+
+                {/* Falta agregar el botón para dar salida */}
             </ButtonGroup>
         </nav>
     );
