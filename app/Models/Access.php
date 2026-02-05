@@ -49,6 +49,18 @@ class Access extends Model
         }
     }
 
+    public function scopeBuildingId(Builder $query, ?int $building_id = null) {
+        if ($building_id && !empty($building_id)) {
+            $query->where('building_id', $building_id);
+        }
+    }
+
+    public function scopeBoothId(Builder $query, ?int $booth_id = null) {
+        if ($booth_id && !empty($booth_id)) {
+            $query->where('booth_id', $booth_id);
+        }
+    }
+
     public function userBy () {
         return $this->belongsTo(User::class, 'user_by_id');;
     }

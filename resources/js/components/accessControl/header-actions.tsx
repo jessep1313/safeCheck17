@@ -6,9 +6,7 @@ import DialogFilter from "./filter/dialog-filter"
 import useFilter from "@/hooks/accessControl/use-filter"
 
 export default () => {
-
     const { data } = useFilter()
-
     return (
         <ButtonGroup>
             <ButtonGroup>

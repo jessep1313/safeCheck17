@@ -20,12 +20,16 @@ class AccessControlController extends Controller
         $perPage = $request->get('per_page', 15);
         $sortBy = $request->get('sort_by', 'created_at');
         $sort = $request->get('sort', 'desc');
-        $checkIn = $request->get('check_in');
-        $checkOut = $request->get('check_out');
+        $dateFrom = $request->get('check_in');
+        $dateTo = $request->get('check_out');
+        $buildingId = $request->get('building_id', '');
+        $boothId = $request->get('booth_id', '');
 
         $paginator = Access::with(['booth', 'userBy', 'building', 'vehicles', 'tools', 'devices'])
             ->orderBy($sortBy, $sort)
-            ->dateCheckIn($checkIn, $checkOut)
+            ->dateCheckIn($dateFrom, $dateTo)
+            ->buildingId($buildingId)
+            ->boothId($boothId)
             ->paginate(perPage: $perPage, page: $currentPage)
             ->through(fn($row) => [
                 'id' => $row->id,
@@ -45,13 +49,19 @@ class AccessControlController extends Controller
 
         return Inertia::render('controlAccess/home', [
             "paginator" => $paginator,
+            "catalogs" => [
+                "buildings" => Building::select(['id', 'name'])->get(),
+                "boots" => Booth::select(['id', 'name'])->get()
+            ],
             "filter" => [
                 "per_page" => $perPage,
                 "page" => $currentPage,
                 "sort_by" => $sortBy,
                 "sort" => $sort,
-                "check_in" => $checkIn,
-                "check_out" => $checkOut,
+                "check_in" => $dateFrom,
+                "check_out" => $dateTo,
+                "building_id" => $buildingId,
+                "booth_id" => $boothId,
                 "search" => $search
             ]
         ]);
