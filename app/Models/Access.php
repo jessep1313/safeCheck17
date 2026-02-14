@@ -49,13 +49,13 @@ class Access extends Model
         }
     }
 
-    public function scopeBuildingId(Builder $query, ?int $building_id = null) {
+    public function scopeBuildingId(Builder $query, ?string $building_id = null) {
         if ($building_id && !empty($building_id)) {
             $query->where('building_id', $building_id);
         }
     }
 
-    public function scopeBoothId(Builder $query, ?int $booth_id = null) {
+    public function scopeBoothId(Builder $query, ?string $booth_id = null) {
         if ($booth_id && !empty($booth_id)) {
             $query->where('booth_id', $booth_id);
         }
