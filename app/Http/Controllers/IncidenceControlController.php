@@ -2,33 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePlanAction;
+use App\Http\Requests\StorePlanActionDefinition;
+use App\Http\Requests\StorePlanActionEvidence;
+use App\Models\ActionPlan;
+use App\Models\ActionPlanEvidence;
 use App\Models\IncidenceAllView;
+use App\Models\StorageTemp;
 use App\Models\Tour;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class IncidenceControlController extends Controller
 {
     public function index(request $request)
     {
-        $currentPage = $request->input("page",1);
-        $perPage = $request->input("per_page",15);
-        $sort = $request->input("sort","desc");
-        $sortBy = $request->input("sort_by","created_at");
-        $search = $request->input("search","");
-
+        $currentPage = $request->input("page", 1);
+        $perPage = $request->input("per_page", 15);
+        $sort = $request->input("sort", "desc");
+        $sortBy = $request->input("sort_by", "created_at");
+        $search = $request->input("search", "");
+        $users = User::select(['id', 'name'])->get();
 
         $paginator = IncidenceAllView::select(['id', 'uuid', 'type', 'created_at', 'comments', 'evidences'])
             ->orderBy($sortBy, $sort)
             ->searchValues($search)
             ->paginate($perPage)
             ->withQueryString()
-            ->through(fn ($row) => [
+            ->through(function ($row) {
+
+                $plan = null;
+
+                if ($row->planActions()->exists()) {
+                    $plan = $row
+                        ->planActions()
+                        ->select(["uuid", "status"])
+                        ->latest()
+                        ->first();
+                }
+
+                return [
                 ...$row->toArray(),
                 'created_at' => Carbon::parse($row->created_at)->format('d/m/Y, h:i a'),
-            ]);
-        
+                'action_plan' => $plan,
+                ];
+            });
+
         return Inertia::render("controlIncidences/home", [
             "title" => "Incidencias de inspección",
             "paginator" => $paginator,
@@ -39,6 +64,7 @@ class IncidenceControlController extends Controller
                 "sort_by" => $sortBy,
                 "search" => $search,
             ],
+            "users" => $users,
         ]);
     }
 
@@ -46,12 +72,13 @@ class IncidenceControlController extends Controller
      * LINK ROUNDS VIEW
      */
 
-    public function rounds(request $request) {
-        $currentPage = $request->input("page",1);
-        $perPage = $request->input("per_page",10);
-        $sort = $request->input("sort","desc");
+    public function rounds(request $request)
+    {
+        $currentPage = $request->input("page", 1);
+        $perPage = $request->input("per_page", 10);
+        $sort = $request->input("sort", "desc");
         $sortBy = $request->input("sort_by", "created_at");
-        $search = $request->input("search","");
+        $search = $request->input("search", "");
 
         $paginator = Tour::with('responsed', 'createdBy')
             ->incidences()
@@ -83,5 +110,111 @@ class IncidenceControlController extends Controller
                 "search" => $search,
             ],
         ]);
+    }
+
+
+    // SECTION PLAN DE ACCION
+
+    public function plan(string $uuid)
+    {
+        $plan = ActionPlan::latest()
+            ->where("uuid_incidence", $uuid)
+            ->firstOrFail();
+
+        return Inertia::render("controlIncidences/plan-action/plan", [
+            "plan" => $plan,
+            "uuid" => $uuid
+        ]);
+    }
+
+    public function evidence(string $uuid)
+    {
+        $plan = ActionPlan::latest()
+            ->where('uuid_incidence', $uuid)
+            ->firstOrFail();
+        $evidences = $plan
+            ->evidences()
+            ->latest()
+            ->get()
+            ->map(fn($row) => [
+                "id" => $row->id,
+                "path" => "/storage/{$row->path}"
+            ]);
+
+        return Inertia::render("controlIncidences/plan-action/evidence", [
+            "uuid" => $uuid,
+            "plan" => $plan,
+            "evidences" => $evidences,
+        ]);
+    }
+
+    public function storePlanAction(StorePlanAction $request)
+    {
+        $incidence = IncidenceAllView::where("uuid", $request->uuid)->first();
+        ActionPlan::create([
+            "uuid" => Str::uuid(),
+            "uuid_incidence" => $request->uuid,
+            "user_id" => $request->user_id,
+            "created_by_id" => Auth::id(),
+            "incidence_type" => $incidence->type,
+        ]);
+        return redirect()->route("incidences-control.action-plan.plan", ["uuid" => $request->uuid]);
+    }
+
+    public function storePlanActionDefinition(StorePlanActionDefinition $request, string $uuid)
+    {
+        $plan = ActionPlan::latest()
+            ->where("uuid_incidence", $uuid)
+            ->firstOrFail();
+        $plan->update([
+            "plan" => $request->definition
+        ]);
+
+        return redirect()->route('incidences-control.action-plan.evidence', ["uuid" => $uuid]);
+    }
+
+    public function storePlanActionEvidence(StorePlanActionEvidence $request, string $uuid)
+    {
+        $imagePath = $this->moveToStorageTemp($request->evidence);
+        $plan = ActionPlan::latest()
+            ->where('uuid_incidence', $uuid)
+            ->firstOrFail();
+
+        $plan->evidences()->create([
+            "path" => $imagePath,
+        ]);
+        return redirect()->route('incidences-control.action-plan.evidence', ["uuid" => $uuid]);
+    }
+
+    private function moveToStorageTemp(string $filename)
+    {
+        $img = StorageTemp::where("filename", $filename)->first();
+        if(!$img) {
+            Log::error("No se encontro el archivo en temp", ["filename" => $filename]);
+            return null;
+        }
+
+        $tempFullPath = "temp/{$img->filename}";
+        $newFullPath = "plan-action/{$img->filename}";
+
+        if(!Storage::disk("public")->exists($tempFullPath)) {
+            Log::error("No se encontro el archivo en temp", ["file_data" => $img]);
+            return null;
+        }
+
+        $moved = Storage::disk("public")->move($tempFullPath, $newFullPath);
+        if(!$moved) {
+            Log::error("No se pudo mover el archivo: ", ["file_data" => $img, "from" => $tempFullPath, "to" => $newFullPath]);
+            return null;
+        }
+
+        return $newFullPath;
+    }
+
+    public function destroyEvidence (string $id) {
+        $img = ActionPlanEvidence::findOrFail($id);
+        Storage::disk("public")->delete($img->path);
+        $img->delete();
+        return redirect()->back();
     }
 }

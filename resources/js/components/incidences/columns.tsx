@@ -1,8 +1,15 @@
 import useFancybox from "@/hooks/use-fancybox";
 import { ColumnDef } from "@/types/datatable";
-import { Incidence, IncidenceType } from '@/types/incidences';
-import { FileSearch, LucideIcon, MoreHorizontal, Route, Truck } from 'lucide-react';
-import { Badge } from '../ui/badge';
+import { Incidence, IncidenceType, PlanActionStatus } from '@/types/incidences.d';
+import { Check, Clock, FileSearch, Hourglass, LucideIcon, MoreHorizontal, Route, Truck, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+
+export const ActionStatuIcons: Record<PlanActionStatus, LucideIcon> = {
+    [PlanActionStatus.PENDING]: Clock,
+    [PlanActionStatus.IN_PROGRESS]: Hourglass,
+    [PlanActionStatus.FINISHED]: Check,
+    [PlanActionStatus.CANCELLED]: X,
+}
 
 export const getColumns = (): ColumnDef<Incidence>[] => {
     const [fancyboxRef] = useFancybox();
@@ -48,7 +55,13 @@ export const getColumns = (): ColumnDef<Incidence>[] => {
         },
         {
             header: 'Plan de acción',
-            cell: () => <Badge variant={'outline'}>No creado</Badge>,
+            cell: ({ action_plan }) => {
+                if (!action_plan) return <Badge variant="secondary"><X size={16} /> No hay plan</Badge>
+                const Icon = ActionStatuIcons[action_plan.status];
+                return (
+                    <Badge variant="default"><Icon size={16} /> {action_plan.status}</Badge>
+                )
+            }
         },
         {
             header: 'Descripción',

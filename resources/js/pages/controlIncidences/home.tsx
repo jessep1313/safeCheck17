@@ -5,6 +5,14 @@ import { getColumns } from "@/components/incidences/columns";
 import { getActions } from "@/components/incidences/actions";
 import { Incidence } from "@/types/incidences";
 import { BreadcrumbItem } from '@/types';
+import useIncidenceControl from "@/hooks/incidenceControl/use-incidence-control";
+import Modal from "@/components/modal";
+import { Button } from "@/components/ui/button";
+import { useId } from "react";
+import FieldSelect from "@/components/form/field-select";
+import { Spinner } from "@/components/ui/spinner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/' },
@@ -13,9 +21,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default () => {
-    const createPlanAction = (incidence: Incidence) => {};
+    const { handleOpenNewPlanAction, processing, data, users, errors, handleChangeUser, handleCloseNewPlanAction, openPlanAction, handleSubmit } = useIncidenceControl();
+    const formId = useId();
     const columns = getColumns();
-    const actions = getActions(createPlanAction);
+    const actions = getActions(handleOpenNewPlanAction);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -23,6 +32,45 @@ export default () => {
             <article className="container">
                 <Datatable columns={columns} actions={actions} routeName="incidences-control.home" />
             </article>
+
+            <Modal
+                title="Crear plan de acción"
+                description="Selecciona a la persona responsable de ejecutar el plan de acción"
+                open={openPlanAction}
+                onHide={handleCloseNewPlanAction}
+                actions={
+                    <Button
+                        type="submit"
+                        form={formId}
+                        disabled={processing}
+                    >
+                        Guardar plan
+                        {processing && <Spinner />}
+                    </Button>
+                }
+            >
+                {errors.uuid && (
+                    <div className="mb-3">
+                        <Alert variant={'destructive'}>
+                            <AlertTriangle />
+                            <AlertDescription>{errors.uuid}</AlertDescription>
+                        </Alert>
+                    </div>
+                )}
+                <form id={formId} onSubmit={handleSubmit}>
+                    <FieldSelect
+                        id="user_plan_id"
+                        name="user_id"
+                        label="Responsable del plan de acción"
+                        required
+                        onValueChange={handleChangeUser}
+                        placeholder="Selecciona un responsable"
+                        value={data.user_id}
+                        options={users.map(user => ({ value: user.id, label: user.name }))}
+                        error={errors.user_id}
+                    />
+                </form>
+            </Modal>
         </AppLayout>
     );
 };

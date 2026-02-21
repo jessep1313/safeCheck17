@@ -1,6 +1,6 @@
 import { DataTableRowAction } from '@/types/datatable';
 import { Incidence } from '@/types/incidences';
-import { CircleDotDashed, Download } from 'lucide-react';
+import { CircleDot, CircleDotDashed, Download, ExternalLink } from 'lucide-react';
 
 export const getActions = (createPlanAction: (incidence: Incidence) => void): DataTableRowAction<Incidence>[] => {
     return [
@@ -14,6 +14,11 @@ export const getActions = (createPlanAction: (incidence: Incidence) => void): Da
             label: 'Crear plan de acción',
             icon: CircleDotDashed,
             onClick: createPlanAction,
+            hide: ({ action_plan }) => !!action_plan
         },
+        {
+            label: "Ver plan de accion",
+            icon: ExternalLink,
+        }
     ];
 };

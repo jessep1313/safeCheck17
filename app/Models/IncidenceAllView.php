@@ -25,4 +25,8 @@ class IncidenceAllView extends Model
                 ->orWhere('comments', 'like', "%$search%");
         });
     }
+
+    function planActions () {
+        return $this->hasMany(ActionPlan::class, "uuid_incidence", "uuid");
+    }
 }
