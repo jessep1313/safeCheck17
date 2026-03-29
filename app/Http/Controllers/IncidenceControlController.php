@@ -28,11 +28,13 @@ class IncidenceControlController extends Controller
         $sort = $request->input("sort", "desc");
         $sortBy = $request->input("sort_by", "created_at");
         $search = $request->input("search", "");
+        $status = $request->input("status", []);
         $users = User::select(['id', 'name'])->get();
 
         $paginator = IncidenceAllView::select(['id', 'uuid', 'type', 'created_at', 'comments', 'evidences'])
             ->orderBy($sortBy, $sort)
             ->searchValues($search)
+            ->status($status)
             ->paginate($perPage)
             ->withQueryString()
             ->through(function ($row) {
@@ -42,15 +44,19 @@ class IncidenceControlController extends Controller
                 if ($row->planActions()->exists()) {
                     $plan = $row
                         ->planActions()
-                        ->select(["uuid", "status"])
+                        ->select(["uuid", "status", 'id', 'finished_at'])
                         ->latest()
                         ->first();
                 }
+                $plan = $plan ? $plan->toArray() : null;
+                if ($plan && $plan['finished_at']) {
+                    $plan['finished_at'] = Carbon::parse($plan[ 'finished_at'])->format('d/m/Y, h:i a');
+                }
 
                 return [
-                ...$row->toArray(),
-                'created_at' => Carbon::parse($row->created_at)->format('d/m/Y, h:i a'),
-                'action_plan' => $plan,
+                    ...$row->toArray(),
+                    'created_at' => Carbon::parse($row->created_at)->format('d/m/Y, h:i a'),
+                    'action_plan' => $plan,
                 ];
             });
 
@@ -189,7 +195,7 @@ class IncidenceControlController extends Controller
     private function moveToStorageTemp(string $filename)
     {
         $img = StorageTemp::where("filename", $filename)->first();
-        if(!$img) {
+        if (!$img) {
             Log::error("No se encontro el archivo en temp", ["filename" => $filename]);
             return null;
         }
@@ -197,13 +203,13 @@ class IncidenceControlController extends Controller
         $tempFullPath = "temp/{$img->filename}";
         $newFullPath = "plan-action/{$img->filename}";
 
-        if(!Storage::disk("public")->exists($tempFullPath)) {
+        if (!Storage::disk("public")->exists($tempFullPath)) {
             Log::error("No se encontro el archivo en temp", ["file_data" => $img]);
             return null;
         }
 
         $moved = Storage::disk("public")->move($tempFullPath, $newFullPath);
-        if(!$moved) {
+        if (!$moved) {
             Log::error("No se pudo mover el archivo: ", ["file_data" => $img, "from" => $tempFullPath, "to" => $newFullPath]);
             return null;
         }
@@ -211,10 +217,17 @@ class IncidenceControlController extends Controller
         return $newFullPath;
     }
 
-    public function destroyEvidence (string $id) {
+    public function destroyEvidence(string $id)
+    {
         $img = ActionPlanEvidence::findOrFail($id);
         Storage::disk("public")->delete($img->path);
         $img->delete();
         return redirect()->back();
     }
+
+    public function exportPdf (Request $request) {
+
+    }
+
+    public function exportExcel () {}
 }

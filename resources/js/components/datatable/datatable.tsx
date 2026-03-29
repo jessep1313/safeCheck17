@@ -35,14 +35,12 @@ export default <T,>({ headerActions, columns, createLabel, onCreate, createLink,
 
     return (
         <article>
-
             <DtHeader
                 filter={filter}
                 routeName={routeName}
             >
                 {headerActions}
             </DtHeader>
-
             <section>
                 <Table>
                     <TableHeader>

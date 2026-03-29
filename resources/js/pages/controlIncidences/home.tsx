@@ -1,18 +1,18 @@
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
+import { BreadcrumbItem } from '@/types';
+import { Button } from "@/components/ui/button";
+import { getActions } from "@/components/incidences/actions";
+import { getColumns } from "@/components/incidences/columns";
+import { Spinner } from "@/components/ui/spinner";
+import { useId } from "react";
 import AppHeader from "@/layouts/app-header";
 import AppLayout from '@/layouts/app-layout';
 import Datatable from "@/components/datatable/datatable";
-import { getColumns } from "@/components/incidences/columns";
-import { getActions } from "@/components/incidences/actions";
-import { Incidence } from "@/types/incidences";
-import { BreadcrumbItem } from '@/types';
-import useIncidenceControl from "@/hooks/incidenceControl/use-incidence-control";
-import Modal from "@/components/modal";
-import { Button } from "@/components/ui/button";
-import { useId } from "react";
 import FieldSelect from "@/components/form/field-select";
-import { Spinner } from "@/components/ui/spinner";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import Modal from "@/components/modal";
+import useIncidenceControl from "@/hooks/incidenceControl/use-incidence-control";
+import HeaderActions from "@/components/incidences/header-actions";
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/' },
@@ -21,16 +21,24 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default () => {
-    const { handleOpenNewPlanAction, processing, data, users, errors, handleChangeUser, handleCloseNewPlanAction, openPlanAction, handleSubmit } = useIncidenceControl();
+    const { handleOpenNewPlanAction, processing, data, users, errors, handleChangeUser, handleCloseNewPlanAction, openPlanAction, handleSubmit, handleStartPlan, handleStopPlan, handleCancelPlan } = useIncidenceControl();
+
     const formId = useId();
     const columns = getColumns();
-    const actions = getActions(handleOpenNewPlanAction);
+
+    const actions = getActions({
+        createPlanAction: handleOpenNewPlanAction,
+        startPlanAction: handleStartPlan,
+        stopPlanAction: handleStopPlan,
+        cancelPlanAction: handleCancelPlan,
+    });
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <AppHeader title={'Incidencias de inspecciones'} text="Control de incidencias" />
+
             <article className="container">
-                <Datatable columns={columns} actions={actions} routeName="incidences-control.home" />
+                <Datatable columns={columns} actions={actions} headerActions={<HeaderActions />} routeName="incidences-control.home" />
             </article>
 
             <Modal
@@ -66,7 +74,7 @@ export default () => {
                         onValueChange={handleChangeUser}
                         placeholder="Selecciona un responsable"
                         value={data.user_id}
-                        options={users.map(user => ({ value: user.id, label: user.name }))}
+                        options={users.map((user: any) => ({ value: user.id, label: user.name }))}
                         error={errors.user_id}
                     />
                 </form>

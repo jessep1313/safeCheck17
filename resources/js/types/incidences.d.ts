@@ -1,16 +1,10 @@
 import { Check, Clock, Hourglass, LucideIcon, X } from "lucide-react";
+import { PlanActionStatus } from "@/enums";
 
 export enum IncidenceType {
     INSPECTION = 'Inspeccion',
     ROUND = 'Recorrido',
     OTHER = 'Otro',
-}
-
-export enum PlanActionStatus {
-    PENDING = 'Pendiente',
-    IN_PROGRESS = 'En Proceso',
-    FINISHED = 'Finalizado',
-    CANCELLED = 'Cancelado',
 }
 
 export interface Incidence {
@@ -22,18 +16,32 @@ export interface Incidence {
     action_plan?: {
         uuid: string;
         status: PlanActionStatus;
+        id: string;
+        finished_at?: string;
     };
     created_at: string;
 }
 
 export interface ActionPlan {
     id: string;
+    user_id: string;
+    created_by_id: string;
     uuid: string;
     uuid_incidence: string;
     incidence_type: IncidenceType;
     plan?: string;
-    user_id: string;
-    created_by_id: string;
     status: PlanActionStatus;
     finished_at?: string;
+}
+
+export interface ActionPlanShow extends ActionPlan {
+    evidences: string[]
+    created_by: string
+    assigned_to: string
+    created_at: string
+}
+
+export interface FilterIncidences {
+    status: string[]
+    type: string[]
 }

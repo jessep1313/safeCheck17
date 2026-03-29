@@ -26,7 +26,20 @@ class IncidenceAllView extends Model
         });
     }
 
-    function planActions () {
+    protected function scopeStatus(Builder $query, ?array $status = [])
+    {
+        if ($status && count($status) > 0) {
+            $statuses = array_filter($status, fn($s) => $s !== "Ninguno");
+            if (array_search("Ninguno", $status) !== false) {
+                $query = $query->whereNull("status");
+            }
+            $query = $query->whereIn("status", $statuses);
+        }
+        return $query;
+    }
+
+    function planActions()
+    {
         return $this->hasMany(ActionPlan::class, "uuid_incidence", "uuid");
     }
 }

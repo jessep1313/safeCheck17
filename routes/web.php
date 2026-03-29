@@ -50,4 +50,5 @@ require __DIR__ . '/web/incidences.php';
 require __DIR__ . '/web/tour.php';
 require __DIR__ . '/web/audit.php';
 require __DIR__ . '/web/groups.php';
+require __DIR__ . '/web/actions-plan.php';
 require __DIR__ . '/auth.php';

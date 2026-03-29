@@ -7,11 +7,13 @@ interface FieldCheckProps extends React.ComponentProps<typeof Checkbox> {
     name: string,
 }
 
-export default ({label, name, id, ...props}: FieldCheckProps) => {
+export default ({ label, name, id, ...props }: FieldCheckProps) => {
     return (
         <div className="space-x-2">
-            <Checkbox id={id} name={name} {...props} />
-            <Label htmlFor={id}>{label}</Label>
+            <Label htmlFor={id} className="inline-flex gap-2 items-center font-medium">
+                <Checkbox id={id} name={name} {...props} />
+                {label}
+            </Label>
         </div>
     )
 }

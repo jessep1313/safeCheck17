@@ -1,14 +1,15 @@
 import useFancybox from "@/hooks/use-fancybox";
 import { ColumnDef } from "@/types/datatable";
-import { Incidence, IncidenceType, PlanActionStatus } from '@/types/incidences.d';
-import { Check, Clock, FileSearch, Hourglass, LucideIcon, MoreHorizontal, Route, Truck, X } from 'lucide-react';
+import { Incidence, IncidenceType } from '@/types/incidences.d';
+import { PlanActionStatus } from "@/enums"
+import { CheckCircle, Clock, FileSearch, Hourglass, LucideIcon, MoreHorizontal, Route, Truck, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-export const ActionStatuIcons: Record<PlanActionStatus, LucideIcon> = {
-    [PlanActionStatus.PENDING]: Clock,
-    [PlanActionStatus.IN_PROGRESS]: Hourglass,
-    [PlanActionStatus.FINISHED]: Check,
-    [PlanActionStatus.CANCELLED]: X,
+export const ActionStatusRecord: Record<PlanActionStatus, { icon: LucideIcon, color: 'default' | 'destructive' | 'outline' | 'secondary' }> = {
+    [PlanActionStatus.PENDING]: { icon: Clock, color: 'secondary' },
+    [PlanActionStatus.IN_PROGRESS]: { icon: Hourglass, color: 'default' },
+    [PlanActionStatus.FINISHED]: { icon: CheckCircle, color: 'outline' },
+    [PlanActionStatus.CANCELLED]: { icon: X, color: 'destructive' },
 }
 
 export const getColumns = (): ColumnDef<Incidence>[] => {
@@ -56,12 +57,16 @@ export const getColumns = (): ColumnDef<Incidence>[] => {
         {
             header: 'Plan de acción',
             cell: ({ action_plan }) => {
-                if (!action_plan) return <Badge variant="secondary"><X size={16} /> No hay plan</Badge>
-                const Icon = ActionStatuIcons[action_plan.status];
+                if (!action_plan) return <span className="inline-flex gap-1 items-center text-muted-foreground font-medium"><X size={16} /> Ninguno</span>
+                const status = ActionStatusRecord[action_plan.status];
                 return (
-                    <Badge variant="default"><Icon size={16} /> {action_plan.status}</Badge>
+                    <Badge variant={status.color}><status.icon size={16} /> {action_plan.status}</Badge>
                 )
             }
+        },
+        {
+            header: 'Fin del plan',
+            cell: ({ action_plan }) => action_plan?.finished_at || <span className="text-muted-foreground">Sin finalizar</span>
         },
         {
             header: 'Descripción',
@@ -69,7 +74,7 @@ export const getColumns = (): ColumnDef<Incidence>[] => {
             cell: (row) => (
                 <>
                     {row.comments ? (
-                        <div className="max-w-[150px] text-wrap" dangerouslySetInnerHTML={{ __html: `${row.comments}` }}></div>
+                        <div className="max-w-[150px] text-wrap line-clamp-2 text-sm" dangerouslySetInnerHTML={{ __html: `${row.comments}` }}></div>
                     ) : (
                         <span className="text-muted">Sin comentarios</span>
                     )}
@@ -80,7 +85,7 @@ export const getColumns = (): ColumnDef<Incidence>[] => {
             header: 'Evidencia',
             align: 'start',
             cell: (row) => (
-                <ul className="flex" ref={fancyboxRef}>
+                <ul className="flex ml-4" ref={fancyboxRef}>
                     {row.evidences.map(
                         (imgSrc, key) =>
                             imgSrc && (
