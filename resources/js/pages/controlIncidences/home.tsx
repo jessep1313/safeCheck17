@@ -13,6 +13,7 @@ import FieldSelect from "@/components/form/field-select";
 import Modal from "@/components/modal";
 import useIncidenceControl from "@/hooks/incidenceControl/use-incidence-control";
 import HeaderActions from "@/components/incidences/header-actions";
+import FilterProvider from "@/providers/incidences/filter-provider";
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/' },
@@ -38,7 +39,9 @@ export default () => {
             <AppHeader title={'Incidencias de inspecciones'} text="Control de incidencias" />
 
             <article className="container">
-                <Datatable columns={columns} actions={actions} headerActions={<HeaderActions />} routeName="incidences-control.home" />
+                <FilterProvider>
+                    <Datatable columns={columns} actions={actions} headerActions={<HeaderActions />} routeName="incidences-control.home" />
+                </FilterProvider>
             </article>
 
             <Modal

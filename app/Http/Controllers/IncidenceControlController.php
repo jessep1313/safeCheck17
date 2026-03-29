@@ -29,12 +29,14 @@ class IncidenceControlController extends Controller
         $sortBy = $request->input("sort_by", "created_at");
         $search = $request->input("search", "");
         $status = $request->input("status", []);
+        $type = $request->input("type", []);
         $users = User::select(['id', 'name'])->get();
 
         $paginator = IncidenceAllView::select(['id', 'uuid', 'type', 'created_at', 'comments', 'evidences'])
             ->orderBy($sortBy, $sort)
             ->searchValues($search)
-            ->status($status)
+            ->filterStatus($status)
+            ->filterType($type)
             ->paginate($perPage)
             ->withQueryString()
             ->through(function ($row) {
@@ -69,6 +71,8 @@ class IncidenceControlController extends Controller
                 "sort" => $sort,
                 "sort_by" => $sortBy,
                 "search" => $search,
+                "status" => $status,
+                "type" => $type,
             ],
             "users" => $users,
         ]);
