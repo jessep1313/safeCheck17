@@ -9,6 +9,8 @@ Route::prefix('control-de-incidencias')
     ->group(function () {
 
         Route::get('/', [IncidenceControlController::class, 'index'])->name('home');
+        Route::get('/exportar-pdf', [IncidenceControlController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/exportar-excel', [IncidenceControlController::class, 'exportExcel'])->name('export-excel');
 
         Route::prefix('/{uuid}/plan-de-accion')->as('action-plan.')->group(function () {
 
@@ -20,6 +22,6 @@ Route::prefix('control-de-incidencias')
             Route::post('/create-plan-action', [IncidenceControlController::class, 'storePlanAction'])->name('create-plan-action');
 
         });
-        
+
         Route::delete('/evidencias/{id}', [IncidenceControlController::class, 'destroyEvidence'])->name('destroy.evidence');
     });
